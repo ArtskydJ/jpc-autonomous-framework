@@ -22,33 +22,32 @@
 //Modify this file with your motor names
 
 ///////////////////////////////// MODIFY BELOW /////////////////////////////////
-void driveFlFrBlBr(int *assign, int slewRate, int frontLeft, int frontRight, int backLeft, int backRight) {
-	applySlew(assign, slewRate, DRIVE_FL, frontLeft);
-	applySlew(assign, slewRate, DRIVE_FR, frontRight);
-	applySlew(assign, slewRate, DRIVE_BL1, backLeft);
-	applySlew(assign, slewRate, DRIVE_BL2, backLeft);
-	applySlew(assign, slewRate, DRIVE_BR1, backRight);
-	applySlew(assign, slewRate, DRIVE_BR2, backRight);
+void driveFlFrBlBr(int slewRate, int frontLeft, int frontRight, int backLeft, int backRight) {
+	applySlew(slewRate, DRIVE_FL, frontLeft);
+	applySlew(slewRate, DRIVE_FR, frontRight);
+	applySlew(slewRate, DRIVE_BL1, backLeft);
+	applySlew(slewRate, DRIVE_BL2, backLeft);
+	applySlew(slewRate, DRIVE_BR1, backRight);
+	applySlew(slewRate, DRIVE_BR2, backRight);
 }
 
-void liftLR(int *assign, int slewRate, unsigned int both) {
-	applySlew(assign, slewRate, LIFT_L, decodeL(both));
-	applySlew(assign, slewRate, LIFT_R, decodeR(both));
+void liftLR(int slewRate, unsigned int both) {
+	applySlew(slewRate, LIFT_L, decodeL(both));
+	applySlew(slewRate, LIFT_R, decodeR(both));
 }
 
-void intakeLR(int *assign, int slewRate, int target) {
-	applySlew(assign, slewRate, INTK_L, target);
-	applySlew(assign, slewRate, INTK_R, target);
+void intakeLR(int slewRate, int target) {
+	applySlew(slewRate, INTK_L, target);
+	applySlew(slewRate, INTK_R, target);
 }
 ///////////////////////////////// MODIFY ABOVE /////////////////////////////////
 
-void applySlew(int *assign, int slewRate, int mtr, int target) { //has a function prototype
-	*assign[mtr] = slew(target, *assign[wheel], slewRate);
+void applySlew(int slewRate, int mtr, int target) { //has a function prototype
+	motor[mtr] = slew(target, motor[mtr], slewRate);
 }
 
-void driveLRS(int *assign, int slewRate, int left, int right, int strafe) {
+void driveLRS(int slewRate, int left, int right, int strafe) {
 	driveFlFrBlBr(
-		assign,
 		slewRate,
 		left  + strafe,
 		right - strafe,
@@ -57,9 +56,8 @@ void driveLRS(int *assign, int slewRate, int left, int right, int strafe) {
 	);
 }
 
-void driveFTS(int *assign, int slewRate, int forward, int turn, int strafe) {
+void driveFTS(int slewRate, int forward, int turn, int strafe) {
 	driveFlFrBlBr(
-		assign,
 		slewRate,
 		forward + turn + strafe,
 		forward + turn - strafe,

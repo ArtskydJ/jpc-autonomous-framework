@@ -22,9 +22,9 @@
 void auto(unsigned int driveLR, int driveStrafe, unsigned int liftLR, int intake) {
 	int driveLeft = decodeL(driveLR);
 	int driveRight = decodeR(driveLR);
-	driveLRS(&motor, DRIVE_SLEW_RATE, driveLeft, driveRight, driveStrafe);
-	liftLR(&motor, LIFT_SLEW_RATE, liftLR);
-	intakeLR(&motor, INTAKE_SLEW_RATE, intake);
+	driveLRS(DRIVE_SLEW_RATE, driveLeft, driveRight, driveStrafe);
+	liftLR(LIFT_SLEW_RATE, liftLR);
+	intakeLR(INTAKE_SLEW_RATE, intake);
 }
 
 void solenoid(int sensor, T_SOLENOID_OPTS targetState) {
