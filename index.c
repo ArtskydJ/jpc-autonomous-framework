@@ -49,6 +49,24 @@
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
 |* This project is to give those who use the VEX competition template an easier, *|
 |* more powerful, and cleaner way to write autonomous routines.                  *|
+|*                                                                               *|
+|* Diagram:                                                                      *|
+|*                                   main()                                      *|
+|*                           ┌─────────┴─────────┐                               *|
+|*                           ▼                   │                               *|
+|*                      autonomous()             ▼                               *|
+|*                           ▼              usercontrol()                        *|
+|*                         auto()                ▼                               *|
+|*                           ▼               driveFTS()                          *|
+|*                       driveLRS()              │                               *|
+|*                           └─────────┬─────────┘                               *|
+|*                                     ▼                                         *|
+|*                               driveFlFrBlBr()                                 *|
+|*                                     ▼                                         *|
+|*                                 applySlew()                                   *|
+|*                                     ▼                                         *|
+|*                                   motor[]                                     *|
+|*                                                                               *|
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 
@@ -59,6 +77,7 @@
 #pragma userControlDuration(105)
 #include "Vex_Competition_Includes.c"
 
+//JPC Autonomous Framework
 #include "definitions.c"
 #include "config.c"
 #include "utility-functions.c"
@@ -76,7 +95,8 @@ task autonomous() {
 
 task usercontrol() {
 	while (true) {
-		//your code here
+		driveForwardTurnStrafe(vexRT(Ch3), vexRT(Ch4), vexRT(Ch1));
+		liftSpeeds( straight( buttonsToSpeed(Btn5U, Btn5D) ) );
+		intakeSpeed( buttonsToSpeed(Btn6U, Btn6D) );
 	}
 }
-

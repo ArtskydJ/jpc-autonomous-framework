@@ -19,9 +19,12 @@
 |* THE SOFTWARE.                                                                 *|
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-//Modify this file with your motor names
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
+|* Modify this file with your motor names.                                       *|
+\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 ///////////////////////////////// MODIFY BELOW /////////////////////////////////
+//Drive: Front left, Front right, Back left, Back right
 void driveFlFrBlBr(int slewRate, int frontLeft, int frontRight, int backLeft, int backRight) {
 	applySlew(slewRate, DRIVE_FL, frontLeft);
 	applySlew(slewRate, DRIVE_FR, frontRight);
@@ -31,22 +34,24 @@ void driveFlFrBlBr(int slewRate, int frontLeft, int frontRight, int backLeft, in
 	applySlew(slewRate, DRIVE_BR2, backRight);
 }
 
-void liftLR(int slewRate, unsigned int both) {
+//Lift: Left, Right
+void liftSpeeds(int slewRate, unsigned int both) {
 	applySlew(slewRate, LIFT_L, decodeL(both));
 	applySlew(slewRate, LIFT_R, decodeR(both));
 }
 
-void intakeLR(int slewRate, int target) {
+//Intake
+void intakeSpeed(int slewRate, int target) {
 	applySlew(slewRate, INTK_L, target);
 	applySlew(slewRate, INTK_R, target);
 }
 ///////////////////////////////// MODIFY ABOVE /////////////////////////////////
 
-void applySlew(int slewRate, int mtr, int target) { //has a function prototype
+void applySlew(int slewRate, int mtr, int target) { //has a function prototype, so it can be declared after it's used
 	motor[mtr] = slew(target, motor[mtr], slewRate);
 }
 
-void driveLRS(int slewRate, int left, int right, int strafe) {
+void driveLeftRightStrafe(int slewRate, int left, int right, int strafe) {
 	driveFlFrBlBr(
 		slewRate,
 		left  + strafe,
@@ -56,7 +61,7 @@ void driveLRS(int slewRate, int left, int right, int strafe) {
 	);
 }
 
-void driveFTS(int slewRate, int forward, int turn, int strafe) {
+void driveForwardTurnStrafe(int slewRate, int forward, int turn, int strafe) {
 	driveFlFrBlBr(
 		slewRate,
 		forward + turn + strafe,

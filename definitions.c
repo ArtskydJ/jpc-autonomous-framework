@@ -19,8 +19,7 @@
 |* THE SOFTWARE.                                                                 *|
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-//This is the file for definitions that should not be modified.
-//These are constants that should never need to change.
+//This is the file for constants that should not need to be modified.
 
 //Autonomous motor power presets
 #define FWD     127  //Drive direction
@@ -33,6 +32,13 @@
 #define OUT     127  //Intake
 #define FULL    127  //Max speex
 #define HALF    64   //Half of max speed
+#define BRAKE   5           //Braking motor power
+
+//Sensor values (these could be replaced with variables that are updated periodically.)
+#define CURRENT_GYRO           SensorValue[GYRO]
+#define CURRENT_LEFT_ENC       SensorValue[QUAD_LEFT]
+#define CURRENT_RIGHT_ENC      SensorValue[QUAD_RIGHT]
+#define CURRENT_LINE_FOLLOWER  SensorValue[LINE_FOLLOWER]
 
 //Solenoid options
 typedef enum {
@@ -41,6 +47,15 @@ typedef enum {
 	TOGGLE,
 	NUM_OF_SOLENOID_OPTS
 } T_SOLENOID_OPTS;
+
+typedef enum {
+	TIME_LIMIT = 0,
+	DRIVE_MOTORS,
+	LIFT_MOTORS,
+	INTAKE_MOTORS,
+	ALL_MOTORS,
+	NUM_OF_END_TYPES
+} T_END_TYPES;
 
 //Function Prototypes
 void applySlew(int *assign, int slewRate, int mtr, int target);

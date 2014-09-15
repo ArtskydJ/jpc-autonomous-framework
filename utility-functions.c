@@ -19,10 +19,9 @@
 |* THE SOFTWARE.                                                                 *|
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-
-//This function forces the target between min and max. Examples:
+//This function returns the value between min and max. Examples:
 //rangeLimit(3, 1, 7) -> 3
-//rangeLimit(3, 19, 7) -> 7
+//rangeLimit(3, 9, 7) -> 7
 //rangeLimit(3, 5, 7) -> 5
 int rangeLimit(int min, int value, int max) {
 	if (value < min) value = min;
@@ -30,13 +29,26 @@ int rangeLimit(int min, int value, int max) {
 	return value;
 }
 
+//This function keeps the main loop time of the code constant. It does this by
+//waiting after each loop iteration until x milliseconds have passed since it
+//started the loop iteration. (E.g. Start loop, do stuff, wait, repeat.)
+void constantLoopTime() {
+	while (time1[T4] < MIN_LOOP_MS) {
+	}
+	ClearTimer(T4);
+}
 
 //This function returns a corrected value for potentiometers that were installed backwards.
 int potReverse(int potentiometer) {
 	return (4095 - potentiometer);
 }
 
-
+//This function checks how far the dial is turned compared to how many options
+//number allowed. E.g. potPosition(100) returns a number between 0 and 99,
+//proportional to how far the dial is turned.
+int potPosition(int INMaxVal) {
+	return capIntValue(0, (float)INMaxVal*senSelectorPot/4096, INMaxVal-1);
+}
 //This function calcs a new motor value with target, previous, and slew values. Examples:
 //slew(100, 0, 5) -> 5
 //slew(100, 15, 5) -> 20
@@ -62,4 +74,12 @@ int decodeR(unsigned int n) {
 //This function turns the first coded value back to the original value
 int decodeL(unsigned int n) {
 	return decodeR(n >> 8); //bitshifting magic
+}
+
+//This function turns two buttons (up/down or left/right) into a motor speed
+int buttonsToSpeed(TVexJoysticks forwardButton, TVexJoysticks reverseButton) {
+	return (
+		vexRT[forwardButton]? FWD : 0 + 
+		vexRT[reverseButton]? REV : 0
+	);
 }

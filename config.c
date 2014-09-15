@@ -19,16 +19,14 @@
 |* THE SOFTWARE.                                                                 *|
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-//This is the file for definitions that can be modified for performance
+//This is the file for definitions that should be modified for performance
 
-//Auton motor power presets
-#define FOLLOW  100  //Line following target speed
-#define BRAKE   5    //Slow down drive
+#define FOLLOW  100         //Line following target speed
+#define GYRO_P  2           //Gyro Proportional
+#define LOOP_TIME_MS 15     //17 ms interval between motor updates I think
+#define LINE_TARGET 2000    //Line follower target
 
 //Slew rates; smaller = more gradual
-#define DRIVE_SLEW_RATE 5   //3/8 sec  (if LOOP_TIME_MS==15)
-#define LIFT_SLEW_RATE 5    //3/8 sec  (if LOOP_TIME_MS==15)
-#define INTAKE_SLEW_RATE 10 //3/16 sec (if LOOP_TIME_MS==15)
-
-//Timing
-#define LOOP_TIME_MS 15 //17? ms interval between motor updates
+#define DRIVE_SLEW_RATE 5   //3/8 sec  (if LOOP_TIME_MS==15, because 15 * 127 / 5  = ~380ms = ~3/8sec)
+#define LIFT_SLEW_RATE 5    //3/8 sec  (if LOOP_TIME_MS==15, because 15 * 127 / 5  = ~380ms = ~3/8sec)
+#define INTAKE_SLEW_RATE 10 //3/16 sec (if LOOP_TIME_MS==15, because 15 * 127 / 10 = ~190ms = ~3/16sec)
