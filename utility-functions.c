@@ -33,7 +33,7 @@ int rangeLimit(int min, int value, int max) {
 //waiting after each loop iteration until x milliseconds have passed since it
 //started the loop iteration. (E.g. Start loop, do stuff, wait, repeat.)
 void constantLoopTime() {
-	while (time1[T4] < MIN_LOOP_MS) {
+	while (time1[T4] < LOOP_TIME_MS) {
 	}
 	ClearTimer(T4);
 }
@@ -46,8 +46,8 @@ int potReverse(int potentiometer) {
 //This function checks how far the dial is turned compared to how many options
 //number allowed. E.g. potPosition(100) returns a number between 0 and 99,
 //proportional to how far the dial is turned.
-int potPosition(int INMaxVal) {
-	return capIntValue(0, (float)INMaxVal*senSelectorPot/4096, INMaxVal-1);
+int potPosition(int numOfOptions, int potentiometer) {
+	return rangeLimit(0, (float)numOfOptions*potentiometer/4096, numOfOptions-1);
 }
 //This function calcs a new motor value with target, previous, and slew values. Examples:
 //slew(100, 0, 5) -> 5
@@ -79,7 +79,7 @@ int decodeL(unsigned int n) {
 //This function turns two buttons (up/down or left/right) into a motor speed
 int buttonsToSpeed(TVexJoysticks forwardButton, TVexJoysticks reverseButton) {
 	return (
-		vexRT[forwardButton]? FWD : 0 + 
+		vexRT[forwardButton]? FWD : 0 +
 		vexRT[reverseButton]? REV : 0
 	);
 }

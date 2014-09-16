@@ -90,13 +90,13 @@ void pre_auton() {
 }
 
 task autonomous() {
-	
+
 }
 
 task usercontrol() {
 	while (true) {
-		driveForwardTurnStrafe(vexRT(Ch3), vexRT(Ch4), vexRT(Ch1));
-		liftSpeeds( straight( buttonsToSpeed(Btn5U, Btn5D) ) );
-		intakeSpeed( buttonsToSpeed(Btn6U, Btn6D) );
+		driveForwardTurnStrafe(DRIVE_SLEW_RATE, vexRT(Ch3), vexRT(Ch4), vexRT(Ch1));
+		liftSpeeds(LIFT_SLEW_RATE, straight( buttonsToSpeed(Btn5U, Btn5D) ) );
+		intakeSpeed(INTAKE_SLEW_RATE, buttonsToSpeed(Btn6U, Btn6D) );
 	}
 }

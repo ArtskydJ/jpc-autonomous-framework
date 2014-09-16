@@ -103,8 +103,8 @@ unsigned int enc1(int dist) { //Both sides, one target, two encoders
 
 unsigned int enc1Spd(int dist, int spd) { //Both sides, one target, two encoders, custom speed
 	return encode(
-		capIntValue(-abs(spd), (dist-CURRENT_LEFT_ENC) * ENC_DRV_P, abs(spd)),
-		capIntValue(-abs(spd), (dist-CURRENT_RIGHT_ENC) * ENC_DRV_P, abs(spd))
+		rangeLimit(-abs(spd), (dist-CURRENT_LEFT_ENC) * ENC_DRV_P, abs(spd)),
+		rangeLimit(-abs(spd), (dist-CURRENT_RIGHT_ENC) * ENC_DRV_P, abs(spd))
 	);
 }
 

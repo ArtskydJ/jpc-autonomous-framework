@@ -58,4 +58,4 @@ typedef enum {
 } T_END_TYPES;
 
 //Function Prototypes
-void applySlew(int *assign, int slewRate, int mtr, int target);
+void applySlew(int slewRate, int mtr, int target);

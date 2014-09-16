@@ -23,6 +23,9 @@
 
 #define FOLLOW  100         //Line following target speed
 #define GYRO_P  2           //Gyro Proportional
+#define LINE_P  1           //Line Follower Proportional
+#define ENC_STRF_P 1        //Encoder Strafe Proportional
+#define ENC_DRV_P 1         //Encoder Drive Proportional
 #define LOOP_TIME_MS 15     //17 ms interval between motor updates I think
 #define LINE_TARGET 2000    //Line follower target
 
