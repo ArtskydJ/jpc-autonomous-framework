@@ -44,6 +44,7 @@
 //Timer values (these could be replaced with variables that are updated periodically.)
 #define TIMER_STEP         time1[T1]
 #define TIMER_END_STEP     time1[T2]
+#define TIMER_LOOP         time1[T4]
 
 //Solenoid options
 typedef enum {
@@ -68,11 +69,6 @@ typedef enum {
 	TIME_UP,
 	NUM_OF_STATES
 } T_STATES;
-
-//Global variables
-int gThisStepNum = 0; //Variable name starting with 'g' implies global
-int gCurrentStepNum = 0;
-T_STATES gStepState = NONE; //states: NONE, HIT, TIME_UP
 
 //Function Prototypes
 void applySlew(int slewRate, int mtr, int target);
