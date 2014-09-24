@@ -35,11 +35,11 @@ void startAuto() {
 
 void nextStep() {
 	gCurrentStepNum++;
-	gCurrentState = NONE;
+	gStepState = NONE;
 }
 
 void endAuto() {
-	if (gCurrentStepNum => gThisStepNum) {
+	if (gCurrentStepNum >= gThisStepNum) {
 		//clear screen or beep or whatever you want
 		//run resetAuto now to loop autonomous routine
 	}
@@ -65,7 +65,7 @@ void auto(unsigned int driveLR, int driveStrafe, unsigned int liftLR, int intake
 				&& abs(driveStrafe) < MOTOR_ALLOW_ZONE) driveDone = true;
 			if (abs(decodeL(liftLR)) < MOTOR_ALLOW_ZONE
 				&& abs(decodeR(liftLR)) < MOTOR_ALLOW_ZONE) liftDone = true;
-			if (abs(intakeSpeed) < MOTOR_ALLOW_ZONE) intakeDone = true;
+			if (abs(intake) < MOTOR_ALLOW_ZONE) intakeDone = true;
 
 			switch(endType) { //check for condition being hit
 				case TIME_LIMIT:    gStepState = (time1[T1] >= endTime)? HIT : NONE; break;
@@ -75,7 +75,11 @@ void auto(unsigned int driveLR, int driveStrafe, unsigned int liftLR, int intake
 				case ALL_MOTORS:    gStepState = (driveDone && liftDone && intakeDone)? HIT : NONE; break;
 			}
 			if (gStepState == HIT) { //if just hit condition
-				(endType == TIME_LIMIT)? gStepState = TIME_UP : ClearTimer(T1);
+				if (endType == TIME_LIMIT) {
+					gStepState = TIME_UP;
+				} else {
+					ClearTimer(T1);
+				}
 			}
 		}
 		if (gStepState == HIT) { //if condition was hit sometime

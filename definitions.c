@@ -41,11 +41,6 @@
 #define CURRENT_RIGHT_ENC      SensorValue[QUAD_RIGHT]
 #define CURRENT_LINE_FOLLOWER  SensorValue[LINE_FOLLOWER]
 
-//Global variables
-int gThisStepNum = 0; //Variable name starting with 'g' implies global
-int gCurrentStepNum = 0;
-T_STATES gStepState = NONE; //states: NONE, HIT, TIME_UP
-
 //Solenoid options
 typedef enum {
 	ON = 0,
@@ -69,6 +64,11 @@ typedef enum {
 	TIME_UP,
 	NUM_OF_STATES
 } T_STATES;
+
+//Global variables
+int gThisStepNum = 0; //Variable name starting with 'g' implies global
+int gCurrentStepNum = 0;
+T_STATES gStepState = NONE; //states: NONE, HIT, TIME_UP
 
 //Function Prototypes
 void applySlew(int slewRate, int mtr, int target);
