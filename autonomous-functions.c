@@ -97,15 +97,7 @@ void solenoid(int sensor, T_SOLENOID_OPTS targetState) {
 }
 
 
-//Yes, I copy & pasted the next 75ish lines from technapwn-toss-up (which I created)
-
-int encStrafe1(int n) { //Strafe to Left Encoder setpoint
-	return (n + (CURRENT_LEFT_ENC + CURRENT_LEFT_ENC)/2) * ENC_STRF_P;
-}
-
-unsigned int speeds(int spdL, int spdR) { //Separate sides different power
-	return encode(spdL, spdR);
-}
+//Yes, I copy & pasted the next 60ish lines from technapwn-toss-up (which I created)
 
 unsigned int stop() { //Don't move forward or reverse
 	return encode(0, 0);
@@ -115,78 +107,65 @@ unsigned int straight(int spd) { //Both sides same power
 	return encode(spd, spd);
 }
 
-unsigned int turn2(int spd) { //Both sides turn power
-	return encode(spd, -spd);
-}
-
-unsigned int turnL(int spd) { //Left side turn power
+unsigned int powerL(int spd) { //Left side turn power
 	return encode(spd, 0);
 }
 
-unsigned int turnR(int spd) { //Right side turn power
+unsigned int powerR(int spd) { //Right side turn power
 	return encode(0, spd);
-}
-
-//////////////////////////////////////////////////////////////////// ANYTHING BELOW THIS HAS VARS THAT DON'T WORK!!!
-
-unsigned int gyroL(int deg) { //Left side turn gyro degrees
-	return encode((deg*10 - CURRENT_GYRO)*GYRO_P*2, 0); //x2 because one side's not moving
-}
-
-unsigned int gyroR(int deg) { //Right side turn gyro
-	return encode(0, (deg*10 - CURRENT_GYRO)*GYRO_P*-2); //x2 because one side's not moving
 }
 
 unsigned int gyro2(int deg) { //Both sides turn gyro
 	return encode(
-		(deg * 10 - CURRENT_GYRO) * GYRO_P,
+		(deg * 10 - CURRENT_GYRO) * GYRO_P, //automatically range limited to REV through FWD
 		(deg * 10 - CURRENT_GYRO) * -GYRO_P
 	);
 }
 
-unsigned int enc(int distL, int distR) { //Individual sides encoders
+unsigned int enc(int dist) { //Both sides, one target, two encoders
 	return encode(
-		(distL - CURRENT_LEFT_ENC) * ENC_DRV_P,
-		(distR - CURRENT_RIGHT_ENC) * ENC_DRV_P
-	);
-}
-
-unsigned int enc1(int dist) { //Both sides, one target, two encoders
-	return encode(
-		(dist - CURRENT_LEFT_ENC) * ENC_DRV_P,
+		(dist - CURRENT_LEFT_ENC) * ENC_DRV_P, //automatically range limited to REV through FWD
 		(dist - CURRENT_RIGHT_ENC) * ENC_DRV_P
 	);
 }
 
-unsigned int enc1Spd(int dist, int spd) { //Both sides, one target, two encoders, custom speed
-	return encode(
-		rangeLimit(-abs(spd), (dist-CURRENT_LEFT_ENC) * ENC_DRV_P, abs(spd)),
-		rangeLimit(-abs(spd), (dist-CURRENT_RIGHT_ENC) * ENC_DRV_P, abs(spd))
-	);
-}
+#if (EXTENDED_API)
+	int encStrafe1(int n) { //Strafe to Left Encoder setpoint
+		return (n + (CURRENT_LEFT_ENC + CURRENT_LEFT_ENC)/2) * ENC_STRF_P;
+	}
 
-unsigned int lineFollow(int spd, int side) {
-	return encode(
-		spd - ( sgn(side) * (CURRENT_LINE_FOLLOWER - LINE_TARGET) * LINE_P ),
-		spd + ( sgn(side) * (CURRENT_LINE_FOLLOWER - LINE_TARGET) * LINE_P )
-	);
-}
+	unsigned int speeds(int spdL, int spdR) { //Separate sides different power, alias: encode()
+		return encode(spdL, spdR);
+	}
+
+	unsigned int gyroL(int deg) { //Left side turn gyro degrees
+		return encode((deg*10 - CURRENT_GYRO)*GYRO_P*2, 0); //x2 b/c one side's not moving
+	}
+
+	unsigned int gyroR(int deg) { //Right side turn gyro
+		return encode(0, (deg*10 - CURRENT_GYRO)*GYRO_P*-2); //x2 b/c one side's not moving
+	}
+
+	unsigned int enc2(int distL, int distR) { //Individual sides encoders
+		return encode(
+			(distL - CURRENT_LEFT_ENC) * ENC_DRV_P, //automatically range limited to REV through FWD
+			(distR - CURRENT_RIGHT_ENC) * ENC_DRV_P
+		);
+	}
+
+	unsigned int enc1Spd(int dist, int spd) { //Both sides, one target, two encoders, custom speed
+		return encode(
+			rangeLimit(-abs(spd), (dist-CURRENT_LEFT_ENC) * ENC_DRV_P, abs(spd)),
+			rangeLimit(-abs(spd), (dist-CURRENT_RIGHT_ENC) * ENC_DRV_P, abs(spd))
+		);
+	}
+#endif
 
 
 
 
 /*
-SETTINGS
-rate limiter (slew)                      YES
-max time duration, toggle (0 for off?)   no
-min time duration, toggle (0 for off?)   no
-motors-to-outputs or whatever
-mecanum toggle?
-
-
 DRIVE
-encoder distance straight
-speed straight
 gyro turn
 
 

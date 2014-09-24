@@ -21,6 +21,7 @@
 
 //This is the file for definitions that should be modified for performance
 
+#define EXTENDED_API 0      //0 = basic api, 1 = extended api
 #define FOLLOW  100         //Line following target speed
 #define GYRO_P  2           //Gyro Proportional
 #define LINE_P  1           //Line Follower Proportional
