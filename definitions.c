@@ -32,13 +32,19 @@
 #define OUT     127  //Intake
 #define FULL    127  //Max speex
 #define HALF    64   //Half of max speed
-#define BRAKE   5           //Braking motor power
+#define BRAKE   5    //Braking motor power
+#define MOTOR_ALLOW_ZONE 30 //Allowable speed for going to next step.
 
 //Sensor values (these could be replaced with variables that are updated periodically.)
 #define CURRENT_GYRO           SensorValue[GYRO]
 #define CURRENT_LEFT_ENC       SensorValue[QUAD_LEFT]
 #define CURRENT_RIGHT_ENC      SensorValue[QUAD_RIGHT]
 #define CURRENT_LINE_FOLLOWER  SensorValue[LINE_FOLLOWER]
+
+//Global variables
+int gThisStepNum = 0; //Variable name starting with 'g' implies global
+int gCurrentStepNum = 0;
+T_STATES gStepState = NONE; //states: NONE, HIT, TIME_UP
 
 //Solenoid options
 typedef enum {
@@ -56,6 +62,13 @@ typedef enum {
 	ALL_MOTORS,
 	NUM_OF_END_TYPES
 } T_END_TYPES;
+
+typedef enum {
+	NONE = 0,
+	HIT,
+	TIME_UP,
+	NUM_OF_STATES
+} T_STATES;
 
 //Function Prototypes
 void applySlew(int slewRate, int mtr, int target);

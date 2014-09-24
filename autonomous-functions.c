@@ -19,16 +19,73 @@
 |* THE SOFTWARE.                                                                 *|
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
+void resetAuto() {
+	gThisStepNum = 0;
+	gCurrentStepNum = 0;
+	gStepState = NONE;
+}
+
+void startAuto() {
+	gThisStepNum = 0; //ALWAYS SET THIS TO 0!
+	if (gCurrentStepNum == 0) {
+		resetAuto();
+		//clear screen or beep or whatever you want
+	}
+}
+
+void nextStep() {
+	gCurrentStepNum++;
+	gCurrentState = NONE;
+}
+
+void endAuto() {
+	if (gCurrentStepNum => gThisStepNum) {
+		//clear screen or beep or whatever you want
+		//run resetAuto now to loop autonomous routine
+	}
+}
+
 void auto(unsigned int driveLR, int driveStrafe, unsigned int liftLR, int intake, T_END_TYPES endType, int endTime) {
 	//Not able to compute values live
 	//Might need to be passed encoder values
 	//Might not need the encoding stuff now
-	int driveLeft = decodeL(driveLR);
-	int driveRight = decodeR(driveLR);
-	driveLeftRightStrafe(DRIVE_SLEW_RATE, driveLeft, driveRight, driveStrafe);
-	liftSpeeds(LIFT_SLEW_RATE, liftLR);
-	intakeSpeed(INTAKE_SLEW_RATE, intake);
+	if (gCurrentStepNum == gThisStepNum) {
+		int driveLeft = decodeL(driveLR);
+		int driveRight = decodeR(driveLR);
+		driveLeftRightStrafe(DRIVE_SLEW_RATE, driveLeft, driveRight, driveStrafe);
+		liftSpeeds(LIFT_SLEW_RATE, liftLR);
+		intakeSpeed(INTAKE_SLEW_RATE, intake);
 
+		if (gStepState == NONE) {
+			bool driveDone = false;
+			bool liftDone = false;
+			bool intakeDone = false;
+			if (abs(driveLeft) < MOTOR_ALLOW_ZONE
+				&& abs(driveRight) < MOTOR_ALLOW_ZONE
+				&& abs(driveStrafe) < MOTOR_ALLOW_ZONE) driveDone = true;
+			if (abs(decodeL(liftLR)) < MOTOR_ALLOW_ZONE
+				&& abs(decodeR(liftLR)) < MOTOR_ALLOW_ZONE) liftDone = true;
+			if (abs(intakeSpeed) < MOTOR_ALLOW_ZONE) intakeDone = true;
+
+			switch(endType) { //check for condition being hit
+				case TIME_LIMIT:    gStepState = (time1[T1] >= endTime)? HIT : NONE; break;
+				case DRIVE_MOTORS:  gStepState = driveDone? HIT : NONE; break;
+				case LIFT_MOTORS:   gStepState = liftDone? HIT : NONE; break;
+				case INTAKE_MOTORS: gStepState = intakeDone? HIT : NONE; break;
+				case ALL_MOTORS:    gStepState = (driveDone && liftDone && intakeDone)? HIT : NONE; break;
+			}
+			if (gStepState == HIT) { //if just hit condition
+				(endType == TIME_LIMIT)? gStepState = TIME_UP : ClearTimer(T1);
+			}
+		}
+		if (gStepState == HIT) { //if condition was hit sometime
+			gStepState = (time1[T1] >= endTime)? TIME_UP : HIT;
+		}
+		if (gStepState == TIME_UP) { //if done with step
+			nextStep();
+		}
+	}
+	gThisStepNum++;
 }
 
 void solenoid(int sensor, T_SOLENOID_OPTS targetState) {
@@ -40,7 +97,7 @@ void solenoid(int sensor, T_SOLENOID_OPTS targetState) {
 }
 
 
-//Yes, I copy & pasted the next 100 or so lines from technapwn-toss-up
+//Yes, I copy & pasted the next 75ish lines from technapwn-toss-up (which I created)
 
 int encStrafe1(int n) { //Strafe to Left Encoder setpoint
 	return (n + (CURRENT_LEFT_ENC + CURRENT_LEFT_ENC)/2) * ENC_STRF_P;

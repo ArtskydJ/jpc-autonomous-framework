@@ -85,12 +85,18 @@
 #include "autonomous-functions.c"
 
 void pre_auton() {
-	bStopTasksBetweenModes = true;
 	bLCDBacklight = true;
 }
 
 task autonomous() {
-
+	resetAuto();
+	while (true) { //Weird as it looks; this loop must exist for the autonomous to work.
+		startAuto();
+		//   Drive L&R,        Strafe,  Lift L&R,    Intake,  End Type,    Time
+		auto(straight(FWD),    0,       stopped(),   0,       TIME_LIMIT,  1000); //Forward for a second
+		endAuto();
+	}
+	
 }
 
 task usercontrol() {
