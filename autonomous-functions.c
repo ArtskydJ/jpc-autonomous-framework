@@ -19,29 +19,49 @@
 |* THE SOFTWARE.                                                                 *|
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-void resetAuto() {
-	gThisStepNum = 0;
-	gCurrentStepNum = 0;
-	gStepState = NONE;
-}
 
-void startAuto() {
-	gThisStepNum = 0; //ALWAYS SET THIS TO 0!
-	if (gCurrentStepNum == 0) {
-		resetAuto();
-		//clear screen or beep or whatever you want
-	}
+static int thisStepNum = 0;
+static int runningStepNum = 0;
+static T_STATES gStepState = NONE; //states: NONE, HIT, TIME_UP
+
+void resetAuto() {
+	writeDebugStreamLine("<autonomous>");
+	thisStepNum = 0;
+	runningStepNum = 0;
+	gStepState = NONE;
+	TIMER_STEP = 0;
+	TIMER_END_STEP = 0;
 }
 
 void nextStep() {
-	gCurrentStepNum++;
-	gCurrentState = NONE;
+	writeDebugStreamLine("Step %d | %1.1f sec", runningStepNum, (float)TIMER_STEP/1000);
+	runningStepNum++;
+	gStepState = NONE;
+	TIMER_STEP = 0;
+	TIMER_END_STEP = 0;
+}
+
+void startAuto() {
+	thisStepNum = 0; //ALWAYS SET THIS TO 0!
+	if (runningStepNum == 0) { //if at the beginning
+		resetAuto();
+		//runningStepNum++;
+		//clear screen or beep or whatever you want
+		//} else { //if not at the beginning
+		nextStep();
+	}
 }
 
 void endAuto() {
-	if (gCurrentStepNum => gThisStepNum) {
+	thisStepNum++;
+	if (runningStepNum == thisStepNum) {
+		writeDebugStreamLine("</autonomous>");
 		//clear screen or beep or whatever you want
 		//run resetAuto now to loop autonomous routine
+		runningStepNum++;
+	}
+	if (runningStepNum >= thisStepNum) {
+		//whenever auton isn't running
 	}
 }
 
@@ -49,7 +69,8 @@ void auto(unsigned int driveLR, int driveStrafe, unsigned int liftLR, int intake
 	//Not able to compute values live
 	//Might need to be passed encoder values
 	//Might not need the encoding stuff now
-	if (gCurrentStepNum == gThisStepNum) {
+	thisStepNum++;
+	if (runningStepNum == thisStepNum) {
 		int driveLeft = decodeL(driveLR);
 		int driveRight = decodeR(driveLR);
 		driveLeftRightStrafe(DRIVE_SLEW_RATE, driveLeft, driveRight, driveStrafe);
@@ -65,7 +86,7 @@ void auto(unsigned int driveLR, int driveStrafe, unsigned int liftLR, int intake
 				&& abs(driveStrafe) < MOTOR_ALLOW_ZONE) driveDone = true;
 			if (abs(decodeL(liftLR)) < MOTOR_ALLOW_ZONE
 				&& abs(decodeR(liftLR)) < MOTOR_ALLOW_ZONE) liftDone = true;
-			if (abs(intakeSpeed) < MOTOR_ALLOW_ZONE) intakeDone = true;
+			if (abs(intake) < MOTOR_ALLOW_ZONE) intakeDone = true;
 
 			switch(endType) { //check for condition being hit
 				case TIME_LIMIT:    gStepState = (time1[T1] >= endTime)? HIT : NONE; break;
@@ -75,7 +96,12 @@ void auto(unsigned int driveLR, int driveStrafe, unsigned int liftLR, int intake
 				case ALL_MOTORS:    gStepState = (driveDone && liftDone && intakeDone)? HIT : NONE; break;
 			}
 			if (gStepState == HIT) { //if just hit condition
-				(endType == TIME_LIMIT)? gStepState = TIME_UP : ClearTimer(T1);
+				writeDebugStreamLine("BL mtr speed: %d", motor[DRIVE_BL1]);
+				if (endType == TIME_LIMIT) {
+					gStepState = TIME_UP;
+				} else {
+					ClearTimer(T1);
+				}
 			}
 		}
 		if (gStepState == HIT) { //if condition was hit sometime
@@ -85,7 +111,6 @@ void auto(unsigned int driveLR, int driveStrafe, unsigned int liftLR, int intake
 			nextStep();
 		}
 	}
-	gThisStepNum++;
 }
 
 void solenoid(int sensor, T_SOLENOID_OPTS targetState) {
@@ -99,7 +124,7 @@ void solenoid(int sensor, T_SOLENOID_OPTS targetState) {
 
 //Yes, I copy & pasted the next 60ish lines from technapwn-toss-up (which I created)
 
-unsigned int stop() { //Don't move forward or reverse
+unsigned int stopped() { //Don't move forward or reverse
 	return encode(0, 0);
 }
 

@@ -19,56 +19,19 @@
 |* THE SOFTWARE.                                                                 *|
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-//This is the file for constants that should not need to be modified.
+void pre_auton();
+task autonomous();
+task usercontrol();
 
-//Autonomous motor power presets
-#define FWD     127  //Drive direction
-#define REV   (-127) //Drive direction
-#define UP      127  //Lift
-#define DOWN  (-127) //Lift
-#define LEFT  (-127) //Turning
-#define RIGHT   127  //Turning
-#define IN    (-127) //Intake
-#define OUT     127  //Intake
-#define FULL    127  //Max speex
-#define HALF    64   //Half of max speed
-#define BRAKE   5    //Braking motor power
-#define MOTOR_ALLOW_ZONE 30 //Allowable speed for going to next step.
-
-//Sensor values (these could be replaced with variables that are updated periodically.)
-#define CURRENT_GYRO           SensorValue[GYRO]
-#define CURRENT_LEFT_ENC       SensorValue[QUAD_LEFT]
-#define CURRENT_RIGHT_ENC      SensorValue[QUAD_RIGHT]
-#define CURRENT_LINE_FOLLOWER  SensorValue[LINE_FOLLOWER]
-
-//Timer values (these could be replaced with variables that are updated periodically.)
-#define TIMER_STEP         time1[T1]
-#define TIMER_END_STEP     time1[T2]
-#define TIMER_LOOP         time1[T4]
-
-//Solenoid options
-typedef enum {
-	ON = 0,
-	OFF,
-	TOGGLE,
-	NUM_OF_SOLENOID_OPTS
-} T_SOLENOID_OPTS;
-
-typedef enum {
-	TIME_LIMIT = 0,
-	DRIVE_MOTORS,
-	LIFT_MOTORS,
-	INTAKE_MOTORS,
-	ALL_MOTORS,
-	NUM_OF_END_TYPES
-} T_END_TYPES;
-
-typedef enum {
-	NONE = 0,
-	HIT,
-	TIME_UP,
-	NUM_OF_STATES
-} T_STATES;
-
-//Function Prototypes
-void applySlew(int slewRate, int mtr, int target);
+task main() {
+	writeDebugStreamLine("");
+	writeDebugStreamLine("==============================");
+	writeDebugStreamLine("Starting task autonomous()");
+	pre_auton();
+	StartTask(autonomous);
+	while(1==1) {
+		wait1Msec(1); //removes infinite loop warning
+	}
+	//This will never run:
+	StartTask(usercontrol); //removes 'Unreferenced task' warning
+}

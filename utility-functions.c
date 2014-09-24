@@ -33,9 +33,10 @@ int rangeLimit(int min, int value, int max) {
 //waiting after each loop iteration until x milliseconds have passed since it
 //started the loop iteration. (E.g. Start loop, do stuff, wait, repeat.)
 void constantLoopTime() {
-	while (time1[T4] < LOOP_TIME_MS) {
+	while (TIMER_LOOP < LOOP_TIME_MS) {
+		//noop
 	}
-	ClearTimer(T4);
+	TIMER_LOOP = 0;
 }
 
 //This function returns a corrected value for potentiometers that were installed backwards.

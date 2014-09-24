@@ -52,19 +52,19 @@
 |*                                                                               *|
 |* Diagram:                                                                      *|
 |*                                   main()                                      *|
-|*                           ┌─────────┴─────────┐                               *|
-|*                           ▼                   │                               *|
-|*                      autonomous()             ▼                               *|
-|*                           ▼              usercontrol()                        *|
-|*                         auto()                ▼                               *|
-|*                           ▼               driveFTS()                          *|
-|*                       driveLRS()              │                               *|
-|*                           └─────────┬─────────┘                               *|
-|*                                     ▼                                         *|
+|*                           |---------|---------|�                               *|
+|*                           V                   |                               *|
+|*                      autonomous()             V                               *|
+|*                           V              usercontrol()                        *|
+|*                         auto()                V                               *|
+|*                           V               driveFTS()                          *|
+|*                       driveLRS()              |                               *|
+|*                           |---------|---------|                               *|
+|*                                     V                                         *|
 |*                               driveFlFrBlBr()                                 *|
-|*                                     ▼                                         *|
+|*                                     V                                         *|
 |*                                 applySlew()                                   *|
-|*                                     ▼                                         *|
+|*                                     V                                         *|
 |*                                   motor[]                                     *|
 |*                                                                               *|
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -75,7 +75,11 @@
 #pragma competitionControl(Competition)
 #pragma autonomousDuration(15)
 #pragma userControlDuration(105)
-#include "Vex_Competition_Includes.c"
+#if(0) //change this to 1
+	#include "Vex_Competition_Includes.c"
+#else
+	#include "run-auto.c"
+#endif
 
 //JPC Autonomous Framework
 #include "definitions.c"
@@ -89,14 +93,17 @@ void pre_auton() {
 }
 
 task autonomous() {
-	resetAuto();
 	while (true) { //Weird as it looks; this loop must exist for the autonomous to work.
 		startAuto();
-		//   Drive L&R,        Strafe,  Lift L&R,    Intake,  End Type,    Time
-		auto(straight(FWD),    0,       stopped(),   0,       TIME_LIMIT,  1000); //Forward for a second
+		//   Drive L&R,       Strafe,  Lift L&R,     Intake,  End Type,    Time
+		auto(straight(FWD),   0,       stopped(),    FWD,     TIME_LIMIT,  1000); //Forward
+		auto(straight(REV),   0,       stopped(),    0,       TIME_LIMIT,  1000); //Reversed
+		auto(stopped(),       LEFT,    straight(60), 0,       TIME_LIMIT,  1000); //Turn left with left wheels
+		auto(turn2(-64),      0,       stopped(),    0,       TIME_LIMIT,  1000); //Zero-turn half speed
+		auto(straight(BRAKE), 0,       stopped(),    0,       TIME_LIMIT,  200);  //Brake
+		auto(straight(-BRAKE),0,       stopped(),    0,       TIME_LIMIT,  200);  //Brake
 		endAuto();
 	}
-	
 }
 
 task usercontrol() {
