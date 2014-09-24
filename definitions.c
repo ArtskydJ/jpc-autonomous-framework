@@ -41,6 +41,10 @@
 #define CURRENT_RIGHT_ENC      SensorValue[QUAD_RIGHT]
 #define CURRENT_LINE_FOLLOWER  SensorValue[LINE_FOLLOWER]
 
+//Timer values (these could be replaced with variables that are updated periodically.)
+#define TIMER_STEP         time1[T1]
+#define TIMER_END_STEP     time1[T2]
+
 //Solenoid options
 typedef enum {
 	ON = 0,

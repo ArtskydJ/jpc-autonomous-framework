@@ -23,6 +23,8 @@ void resetAuto() {
 	gThisStepNum = 0;
 	gCurrentStepNum = 0;
 	gStepState = NONE;
+	TIMER_STEP = 0;
+	TIMER_END_STEP = 0;
 }
 
 void startAuto() {
@@ -34,8 +36,11 @@ void startAuto() {
 }
 
 void nextStep() {
+	writeDebugStreamLine("Step %d | %d sec", gCurrentStepNum, TIMER_STEP);
 	gCurrentStepNum++;
 	gStepState = NONE;
+	TIMER_STEP = 0;
+	TIMER_END_STEP = 0;
 }
 
 void endAuto() {

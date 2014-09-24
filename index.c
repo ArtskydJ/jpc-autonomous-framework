@@ -75,7 +75,11 @@
 #pragma competitionControl(Competition)
 #pragma autonomousDuration(15)
 #pragma userControlDuration(105)
-#include "Vex_Competition_Includes.c"
+#if(false) //change this to true
+	#include "Vex_Competition_Includes.c"
+#else
+	#include "run-auto.c"
+#endif
 
 //JPC Autonomous Framework
 #include "definitions.c"
