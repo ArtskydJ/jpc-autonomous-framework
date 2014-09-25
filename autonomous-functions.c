@@ -22,13 +22,13 @@
 
 static int thisStepNum = 0;
 static int runningStepNum = 0;
-static T_STATES gStepState = NONE; //states: NONE, HIT, TIME_UP
+static T_STATES autoStepState = NONE; //states: NONE, HIT, TIME_UP
 
 void resetAuto() {
 	writeDebugStreamLine("<autonomous>");
 	thisStepNum = 0;
 	runningStepNum = 0;
-	gStepState = NONE;
+	autoStepState = NONE;
 	TIMER_STEP = 0;
 	TIMER_END_STEP = 0;
 }
@@ -36,7 +36,7 @@ void resetAuto() {
 void nextStep() {
 	writeDebugStreamLine("Step %d | %1.1f sec", runningStepNum, (float)TIMER_STEP/1000);
 	runningStepNum++;
-	gStepState = NONE;
+	autoStepState = NONE;
 	TIMER_STEP = 0;
 	TIMER_END_STEP = 0;
 }
@@ -77,7 +77,7 @@ void auto(unsigned int driveLR, int driveStrafe, unsigned int liftLR, int intake
 		liftSpeeds(LIFT_SLEW_RATE, liftLR);
 		intakeSpeed(INTAKE_SLEW_RATE, intake);
 
-		if (gStepState == NONE) {
+		if (autoStepState == NONE) {
 			bool driveDone = false;
 			bool liftDone = false;
 			bool intakeDone = false;
@@ -89,25 +89,21 @@ void auto(unsigned int driveLR, int driveStrafe, unsigned int liftLR, int intake
 			if (abs(intake) < MOTOR_ALLOW_ZONE) intakeDone = true;
 
 			switch(endType) { //check for condition being hit
-				case TIME_LIMIT:    gStepState = (time1[T1] >= endTime)? HIT : NONE; break;
-				case DRIVE_MOTORS:  gStepState = driveDone? HIT : NONE; break;
-				case LIFT_MOTORS:   gStepState = liftDone? HIT : NONE; break;
-				case INTAKE_MOTORS: gStepState = intakeDone? HIT : NONE; break;
-				case ALL_MOTORS:    gStepState = (driveDone && liftDone && intakeDone)? HIT : NONE; break;
+				case TIME_LIMIT:    autoStepState = (TIMER_STEP >= endTime)? TIME_UP : NONE; break;
+				case DRIVE_MOTORS:  autoStepState = driveDone? HIT : NONE; break;
+				case LIFT_MOTORS:   autoStepState = liftDone? HIT : NONE; break;
+				case INTAKE_MOTORS: autoStepState = intakeDone? HIT : NONE; break;
+				case ALL_MOTORS:    autoStepState = (driveDone && liftDone && intakeDone)? HIT : NONE; break;
 			}
-			if (gStepState == HIT) { //if just hit condition
+			if (autoStepState == HIT) { //if just hit condition, not including TIME_LIMIT
 				writeDebugStreamLine("BL mtr speed: %d", motor[DRIVE_BL1]);
-				if (endType == TIME_LIMIT) {
-					gStepState = TIME_UP;
-				} else {
-					ClearTimer(T1);
-				}
 			}
+			TIMER_END_STEP = 0;
 		}
-		if (gStepState == HIT) { //if condition was hit sometime
-			gStepState = (time1[T1] >= endTime)? TIME_UP : HIT;
+		if (autoStepState == HIT) { //if condition was hit sometime
+			autoStepState = (TIMER_END_STEP >= endTime)? TIME_UP : HIT;
 		}
-		if (gStepState == TIME_UP) { //if done with step
+		if (autoStepState == TIME_UP) { //if done with step
 			nextStep();
 		}
 	}
@@ -190,22 +186,8 @@ unsigned int enc(int dist) { //Both sides, one target, two encoders
 
 
 /*
-DRIVE
-gyro turn
-
-
-LIFT
-speed
-preset heights
-preset heights +/-
-
-
-INTAKE
-speed
-
-
-END STEP
-time
-slow motors
-
+- add lift functions
+	- preset heights
+	- preset heights +/-
+- create api, documentation
 */
