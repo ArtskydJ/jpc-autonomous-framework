@@ -35,12 +35,6 @@
 #define BRAKE   5    //Braking motor power
 #define MOTOR_ALLOW_ZONE 30 //Allowable speed for going to next step.
 
-//Sensor values (these could be replaced with variables that are updated periodically.)
-#define CURRENT_GYRO           SensorValue[GYRO]
-#define CURRENT_LEFT_ENC       SensorValue[QUAD_LEFT]
-#define CURRENT_RIGHT_ENC      SensorValue[QUAD_RIGHT]
-#define CURRENT_LINE_FOLLOWER  SensorValue[LINE_FOLLOWER]
-
 //Timer values (these could be replaced with variables that are updated periodically.)
 #define TIMER_STEP         time1[T1]
 #define TIMER_END_STEP     time1[T2]
@@ -48,8 +42,8 @@
 
 //Solenoid options
 typedef enum {
-	ON = 0,
-	OFF,
+	OFF = 0,
+	ON,
 	TOGGLE,
 	NUM_OF_SOLENOID_OPTS
 } T_SOLENOID_OPTS;
@@ -62,13 +56,3 @@ typedef enum {
 	ALL_MOTORS,
 	NUM_OF_END_TYPES
 } T_END_TYPES;
-
-typedef enum {
-	NONE = 0,
-	HIT,
-	TIME_UP,
-	NUM_OF_STATES
-} T_STATES;
-
-//Function Prototypes
-void applySlew(int slewRate, int mtr, int target);

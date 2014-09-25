@@ -19,18 +19,39 @@
 |* THE SOFTWARE.                                                                 *|
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-//This is the file for definitions that should be modified for performance
+//This is the file for definitions that should be modified for each robot
 
-#define EXTENDED_API 0      //0 = basic api, 1 = extended api
-#define FOLLOW  100         //Line following target speed
-#define GYRO_P  2           //Gyro Proportional
-#define LINE_P  1           //Line Follower Proportional
-#define ENC_STRF_P 1        //Encoder Strafe Proportional
-#define ENC_DRV_P 1         //Encoder Drive Proportional
-#define LOOP_TIME_MS 15     //17 ms interval between motor updates I think
-#define LINE_TARGET 2000    //Line follower target
+//Sensor values (these could be replaced with variables that are updated periodically.)
+#define CURRENT_GYRO           SensorValue[GYRO]
+#define CURRENT_LEFT_ENC       SensorValue[QUAD_LEFT]
+#define CURRENT_RIGHT_ENC      SensorValue[QUAD_RIGHT]
+#define CURRENT_LIFT_HEIGHT    SensorValue[POT_LIFT]
+#define CURRENT_LINE_FOLLOWER  SensorValue[LINE_FOLLOWER]
+
+//Proportional Constants
+#define LIFT_P      (float)0.45
+#define LINE_P      (float)0.022
+#define WALL_P      (float)0.1
+#define ENC_DRV_P   (float)0.3
+#define ENC_STRF_P  (float)2.0
+#define US_STRF_P   (float)8.0
+#define GYRO_P      (float)0.45
+#define GYRO_STRF_P (float)1.0
 
 //Slew rates; smaller = more gradual
 #define DRIVE_SLEW_RATE 5   //3/8 sec  (if LOOP_TIME_MS==15, because 15 * 127 / 5  = ~380ms = ~3/8sec)
 #define LIFT_SLEW_RATE 5    //3/8 sec  (if LOOP_TIME_MS==15, because 15 * 127 / 5  = ~380ms = ~3/8sec)
 #define INTAKE_SLEW_RATE 10 //3/16 sec (if LOOP_TIME_MS==15, because 15 * 127 / 10 = ~190ms = ~3/16sec)
+
+//Other
+#define LOOP_TIME_MS 15     //17 ms interval between motor updates I think
+#define LINE_TARGET 2000    //Line follower target
+#define FOLLOW  100         //Line following target speed
+
+//Preset lift heights
+typedef enum {
+	GROUND = 430,
+	LOW_POST = 1605,
+	MED_POST = 2750,
+	HIGH_POST = 3920
+} T_PRESETS;

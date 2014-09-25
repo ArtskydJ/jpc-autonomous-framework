@@ -19,9 +19,10 @@
 |* THE SOFTWARE.                                                                 *|
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\
-|* Modify this file with your motor names.                                       *|
-\* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+//Modify this file with your motor names.
+
+//Prototype
+void applySlew(int slewRate, int mtr, int target);
 
 ///////////////////////////////// MODIFY BELOW /////////////////////////////////
 //Drive: Front left, Front right, Back left, Back right
@@ -47,8 +48,8 @@ void intakeSpeed(int slewRate, int target) {
 }
 ///////////////////////////////// MODIFY ABOVE /////////////////////////////////
 
-void applySlew(int slewRate, int mtr, int target) { //has a function prototype, so it can be declared after it's used
-	motor[mtr] = slew(target, motor[mtr], slewRate);
+void applySlew(int slewRate, int mtr, int target) { //has a prototype, so it can
+	motor[mtr] = slew(target, motor[mtr], slewRate); //be declared after it's used
 }
 
 void driveLeftRightStrafe(int slewRate, int left, int right, int strafe) {

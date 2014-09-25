@@ -19,10 +19,7 @@
 |* THE SOFTWARE.                                                                 *|
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
-//This function returns the value between min and max. Examples:
-//rangeLimit(3, 1, 7) -> 3
-//rangeLimit(3, 9, 7) -> 7
-//rangeLimit(3, 5, 7) -> 5
+//This function returns the value between min and max.
 int rangeLimit(int min, int value, int max) {
 	if (value < min) value = min;
 	if (value > max) value = max;
@@ -50,12 +47,12 @@ int potReverse(int potentiometer) {
 int potPosition(int numOfOptions, int potentiometer) {
 	return rangeLimit(0, (float)numOfOptions*potentiometer/4096, numOfOptions-1);
 }
-//This function calcs a new motor value with target, previous, and slew values. Examples:
+//This function calcs a new speed with target, previous, and slew values. Examples:
 //slew(100, 0, 5) -> 5
 //slew(100, 15, 5) -> 20
 //slew(-100, -80, 5) -> -85
-int slew(int target, int last, int rate) {
-	return (last + rangeLimit(-rate, target-last, rate));
+int slew(int target, int now, int rate) {
+	return (now + rangeLimit(-rate, target-now, rate));
 }
 
 //This function turns 2 motor values into 1 coded value
@@ -65,6 +62,22 @@ unsigned int encode(int l, int r) {
 	ubyte tempL = rangeLimit(REV, l, FWD) + FWD;
 	ubyte tempR = rangeLimit(REV, r, FWD) + FWD;
 	return (tempL<<8) + tempR;
+}
+
+unsigned int encode2(int lr) {
+	return encode(lr, lr);
+}
+
+unsigned int encodeNegative2(int lr) {
+	return encode(lr, -lr);
+}
+
+unsigned int encodeL(int l) {
+	return encode(l, 0);
+}
+
+unsigned int encodeR(int r) {
+	return encode(0, r);
 }
 
 //This function turns the second coded value back to the original value

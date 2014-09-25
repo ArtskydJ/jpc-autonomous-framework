@@ -19,11 +19,20 @@
 |* THE SOFTWARE.                                                                 *|
 \* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
+//Variables and stuff
+typedef enum {
+	NONE = 0,
+	HIT,
+	TIME_UP,
+	NUM_OF_STATES
+} T_STATES;
 
 static int thisStepNum = 0;
 static int runningStepNum = 0;
 static T_STATES autoStepState = NONE; //states: NONE, HIT, TIME_UP
 
+
+//Functions (obviously)
 void resetAuto() {
 	writeDebugStreamLine("<autonomous>");
 	thisStepNum = 0;
@@ -45,30 +54,22 @@ void startAuto() {
 	thisStepNum = 0; //ALWAYS SET THIS TO 0!
 	if (runningStepNum == 0) { //if at the beginning
 		resetAuto();
-		//runningStepNum++;
-		//clear screen or beep or whatever you want
-		//} else { //if not at the beginning
+		//clear screen or beep or whatever
 		nextStep();
 	}
 }
 
-void endAuto() {
+bool endAuto() {
 	thisStepNum++;
 	if (runningStepNum == thisStepNum) {
 		writeDebugStreamLine("</autonomous>");
 		//clear screen or beep or whatever you want
-		//run resetAuto now to loop autonomous routine
-		runningStepNum++;
+		//running resetAuto() now would loop the autonomous routine
 	}
-	if (runningStepNum >= thisStepNum) {
-		//whenever auton isn't running
-	}
+	return (runningStepNum < thisStepNum)
 }
 
 void auto(unsigned int driveLR, int driveStrafe, unsigned int liftLR, int intake, T_END_TYPES endType, int endTime) {
-	//Not able to compute values live
-	//Might need to be passed encoder values
-	//Might not need the encoding stuff now
 	thisStepNum++;
 	if (runningStepNum == thisStepNum) {
 		int driveLeft = decodeL(driveLR);
@@ -121,73 +122,80 @@ void solenoid(int sensor, T_SOLENOID_OPTS targetState) {
 //Yes, I copy & pasted the next 60ish lines from technapwn-toss-up (which I created)
 
 unsigned int stopped() { //Don't move forward or reverse
-	return encode(0, 0);
+	return encode2(0);
 }
 
-unsigned int straight(int spd) { //Both sides same power
-	return encode(spd, spd);
+unsigned int straight(int spd) { //Both sides same power; AKA encode2()
+	return encode2(spd);
 }
 
-unsigned int powerL(int spd) { //Left side turn power
-	return encode(spd, 0);
+unsigned int turn(int spd) { //Both sides same power; AKA encodeNegative2()
+	return encodeNegative2(spd);
 }
 
-unsigned int powerR(int spd) { //Right side turn power
-	return encode(0, spd);
+unsigned int speeds(int spdL, int spdR) {
+	return encode(spdL, spdR); //Sides have separate speeds; AKA encode()
+}
+
+unsigned int speedL(int spd) { //Left side turn speed; AKA encodeL()
+	return encodeL(spd);
+}
+
+unsigned int speedR(int spd) { //Right side turn speed; AKA encodeR()
+	return encodeR(spd);
 }
 
 unsigned int gyro2(int deg) { //Both sides turn gyro
-	return encode(
-		(deg * 10 - CURRENT_GYRO) * GYRO_P, //automatically range limited to REV through FWD
-		(deg * 10 - CURRENT_GYRO) * -GYRO_P
+	return encodeNegative2(
+		(deg * 10 - CURRENT_GYRO) * GYRO_P //auto range limited to REV thru FWD
 	);
 }
 
 unsigned int enc(int dist) { //Both sides, one target, two encoders
 	return encode(
-		(dist - CURRENT_LEFT_ENC) * ENC_DRV_P, //automatically range limited to REV through FWD
-		(dist - CURRENT_RIGHT_ENC) * ENC_DRV_P
+		(dist - CURRENT_LEFT_ENC) * ENC_DRV_P, //automatically range limited...
+		(dist - CURRENT_RIGHT_ENC) * ENC_DRV_P //...to REV through FWD
 	);
 }
 
-#if (EXTENDED_API)
-	int encStrafe1(int n) { //Strafe to Left Encoder setpoint
-		return (n + (CURRENT_LEFT_ENC + CURRENT_LEFT_ENC)/2) * ENC_STRF_P;
-	}
+//Advanced API below...
+int encStrafe1(int n) { //Strafe to Left Encoder setpoint
+	return (n + (CURRENT_LEFT_ENC + CURRENT_LEFT_ENC) / 2) * ENC_STRF_P;
+}
 
-	unsigned int speeds(int spdL, int spdR) { //Separate sides different power, alias: encode()
-		return encode(spdL, spdR);
-	}
+int encStrafe2(int n) { //Strafe to Left Encoder setpoint
+	return (n + (CURRENT_LEFT_ENC - CURRENT_RIGHT_ENC) / 2) * ENC_STRF_P;
+} //Subtract b/c they're going opposite dirs
 
-	unsigned int gyroL(int deg) { //Left side turn gyro degrees
-		return encode((deg*10 - CURRENT_GYRO)*GYRO_P*2, 0); //x2 b/c one side's not moving
-	}
+unsigned int gyroL(int deg) { //Left side turn gyro degrees
+	return encodeL(
+		(deg*10 - CURRENT_GYRO) * GYRO_P * 2 //x2 b/c one side isn't movin
+	);
+}
 
-	unsigned int gyroR(int deg) { //Right side turn gyro
-		return encode(0, (deg*10 - CURRENT_GYRO)*GYRO_P*-2); //x2 b/c one side's not moving
-	}
+unsigned int gyroR(int deg) { //Right side turn gyro
+	return encodeR(
+		(deg*10 - CURRENT_GYRO) * GYRO_P * -2 //x2 b/c one side isn't movin
+	);
+}
 
-	unsigned int enc2(int distL, int distR) { //Individual sides encoders
-		return encode(
-			(distL - CURRENT_LEFT_ENC) * ENC_DRV_P, //automatically range limited to REV through FWD
-			(distR - CURRENT_RIGHT_ENC) * ENC_DRV_P
-		);
-	}
+unsigned int enc2(int distL, int distR) { //Individual sides encoders
+	return encode(
+		(distL - CURRENT_LEFT_ENC) * ENC_DRV_P, //automatically range limited to REV through FWD
+		(distR - CURRENT_RIGHT_ENC) * ENC_DRV_P
+	);
+}
 
-	unsigned int enc1Spd(int dist, int spd) { //Both sides, one target, two encoders, custom speed
-		return encode(
-			rangeLimit(-abs(spd), (dist-CURRENT_LEFT_ENC) * ENC_DRV_P, abs(spd)),
-			rangeLimit(-abs(spd), (dist-CURRENT_RIGHT_ENC) * ENC_DRV_P, abs(spd))
-		);
-	}
-#endif
+unsigned int enc1Spd(int dist, int spd) { //2 sides, 1 dist, 2 encs, custom spd
+	return encode(
+		rangeLimit(-abs(spd), (dist - CURRENT_LEFT_ENC) * ENC_DRV_P, abs(spd)),
+		rangeLimit(-abs(spd), (dist - CURRENT_RIGHT_ENC) * ENC_DRV_P, abs(spd))
+	);
+}
 
-
-
-
-/*
-- add lift functions
-	- preset heights
-	- preset heights +/-
-- create api, documentation
-*/
+//LIFTING
+unsigned int liftPreset(T_PRESETS height) {
+	return encode2(
+		(height - CURRENT_LIFT_HEIGHT) * LIFT_P
+	);
+}

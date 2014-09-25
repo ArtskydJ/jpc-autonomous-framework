@@ -52,14 +52,15 @@
 |*                                                                               *|
 |* Diagram:                                                                      *|
 |*                                   main()                                      *|
-|*                           |---------|---------|ê                               *|
+|*                            _________|__________                               *|
 |*                           V                   |                               *|
 |*                      autonomous()             V                               *|
 |*                           V              usercontrol()                        *|
 |*                         auto()                V                               *|
 |*                           V               driveFTS()                          *|
 |*                       driveLRS()              |                               *|
-|*                           |---------|---------|                               *|
+|*                           |_________ _________|                               *|
+|*                                     |                                         *|
 |*                                     V                                         *|
 |*                               driveFlFrBlBr()                                 *|
 |*                                     V                                         *|
@@ -93,16 +94,18 @@ void pre_auton() {
 }
 
 task autonomous() {
-	while (true) { //Weird as it looks; this loop must exist for the autonomous to work.
+	bool runningAuto = true;
+	while (runningAuto) { //Weird as it looks; this loop must exist for the autonomous to work.
 		startAuto();
-		//   Drive L&R,       Strafe,  Lift L&R,     Intake,  End Type,    Time
+		//___Drive_L&R________Strafe___Lift_L&R______Intake___End_Type_____Time_____Notes
 		auto(straight(FWD),   0,       stopped(),    FWD,     TIME_LIMIT,  1000); //Forward
 		auto(straight(REV),   0,       stopped(),    0,       TIME_LIMIT,  1000); //Reversed
 		auto(stopped(),       LEFT,    straight(60), 0,       TIME_LIMIT,  1000); //Turn left with left wheels
 		auto(turn2(-64),      0,       stopped(),    0,       TIME_LIMIT,  1000); //Zero-turn half speed
 		auto(straight(BRAKE), 0,       stopped(),    0,       TIME_LIMIT,  200);  //Brake
 		auto(straight(-BRAKE),0,       stopped(),    0,       TIME_LIMIT,  200);  //Brake
-		endAuto();
+		runningAuto = endAuto();
+		constantLoopTime(); //Important for slew
 	}
 }
 
@@ -111,5 +114,6 @@ task usercontrol() {
 		driveForwardTurnStrafe(DRIVE_SLEW_RATE, vexRT(Ch3), vexRT(Ch4), vexRT(Ch1));
 		liftSpeeds(LIFT_SLEW_RATE, straight( buttonsToSpeed(Btn5U, Btn5D) ) );
 		intakeSpeed(INTAKE_SLEW_RATE, buttonsToSpeed(Btn6U, Btn6D) );
+		constantLoopTime(); //Important for slew
 	}
 }
