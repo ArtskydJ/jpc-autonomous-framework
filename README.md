@@ -10,24 +10,25 @@ An entry for [jpearman's 2014 programming challenge](http://www.vexforum.com/sho
 	- [Utility Functions](#utility-functions)
 	- [Autonomous Functions](#autonomous-functions)
 - [Advanced Api](#advanced-api)
-	- [Motor Functions](#motor-functions2)
-	- [Utility Functions](#utility-functions2)
-	- [Autonomous Functions](#autonomous-functions2)
+	- [Motor Functions](#motor-functions-1)
+	- [Utility Functions](#utility-functions-1)
+	- [Autonomous Functions](#autonomous-functions-1)
+- [License](#license)
 
 #How to use
 
-0. Read this entire file. :D
-1. Fork this project and clone your fork to your computer.
-2. Open `index.c` and enter all your motors and sensors.
-3. Open `config.c` and enter your configuration
+1. Read this entire file. :D
+2. Fork this project and clone your fork to your computer.
+3. Open `index.c` and enter all your motors and sensors.
+4. Open `config.c` and enter your configuration:
 	- Enter your sensor config into the `#define`s. (Should be around line 30.)
 	- Enter your lift presets into the `T_PRESETS` enum. (Should be around line 55.)
 	- If you know what proportional, slew, and other constants you want, enter them now.
-4. Open `motor-functions.c`. Change the motor names in the following functions:
+5. Open `motor-functions.c`. Change the motor names in the following functions:
 	- In `driveFlFrBlBr()` change `DRIVE_FL` down to `DRIVE_BR2`.
 	- In `liftSpeeds()` change `LIFT_L` and `LIFT_R`.
 	- In `intakeSpeed()` change `INTK_L` and `INTK_R`.
-	- If you *do not* have a mecanum or X-drive, you will want to change how strafing works.
+	- If you *do not* have a mecanum or X-drive, you will want to change how strafing works:
 		- If you have an H-drive, you will have to rewrite `driveFlFrBlBr()`, and modify `driveLeftRightStrafe()` and `driveForwardTurnStrafe()` accordingly. If you need help with this, please create an issue on github.
 		- If you don't have strafing, just delete all references to `strafe` in `driveLeftRightStrafe()` and `driveForwardTurnStrafe()`. Again, if you need help, create an issue.
 
@@ -45,12 +46,20 @@ The basic API has all the functions you should need. If you want more, check out
 - `int backLeft` is the target speed for the back left motor(s). Negative for reverse.
 - `int backRight` is the target speed for the back right motor(s). Negative for reverse.
 
+```c
+driveFlFrBlBr(10, FWD, FWD, FWD, FWD);
+```
+
 ###void driveLeftRightStrafe(int slewRate, int left, int right, int strafe)
 
 - `int slewRate` is the rate at which the motor approaches its target.
 - `int left` is the target speed for the left side. Negative for reverse.
 - `int right` is the target speed for the left side. Negative for reverse.
 - `int strafe` is the target strafing speed. Negative for left.
+
+```c
+driveLeftRightStrafe(10, FWD, FWD, 0);
+```
 
 ###void driveForwardTurnStrafe(int slewRate, int forward, int turn, int strafe)
 
@@ -59,15 +68,27 @@ The basic API has all the functions you should need. If you want more, check out
 - `int turn` is the target turning speed. Negative for left.
 - `int strafe` is the target strafing speed. Negative for left.
 
+```c
+driveForwardTurnStrafe(10, FWD, LEFT, 0);
+```
+
 ###void liftSpeeds(int slewRate, unsigned int both)
 
 - `int slewRate` is the rate at which the motor approaches its target.
 - `unsigned int both` holds the speeds for both sides of the lift. The speeds are encoded. (See [Autonomous Functions](#autonomous-functions) for details.)
 
+```c
+liftSpeeds(10, encode(FWD, FWD));
+```
+
 ###void intakeSpeed(int slewRate, int target)
 
 - `int slewRate` is the rate at which the motor approaches its target.
 - `int target` is the target speed. Negative for reverse.
+
+```c
+intakeSpeed(10, FWD);
+```
 
 ##Utility Functions
 
@@ -195,13 +216,15 @@ Let's say that the left side is supposed to go a speed of -60, and the right sid
 l     r       l(hex)  r(hex)   l(binary)  r(binary)          Notes
 -60   120                                                    start
 67    247     0x43    0xF7     1000011    11110111           add 127
-67    63232   0x43    0xF700   1000011    1111011100000000   bitshift right number 8 spaces
+67    63232   0x43    0xF700   1000011    1111011100000000   bitshift 'r' 8 bits
   63299          0xF743            1111011101000011          resulting number
 ```
 
 ###unsigned int stopped()
 
 Returns an encoded number for both sides going a speed of 0.
+
+Aliases: `encode2(0)`, `encode(0, 0)`
 
 
 ###unsigned int straight(int spd)
@@ -318,25 +341,32 @@ decodeL( encode(100, 99) ); //Returns 99
 ##Autonomous Functions
 
 ###int encStrafe1(int n)
+
 Returns a *non*-encoded number for strafing `n` encoder ticks reading 1 encoder.
 
 ###int encStrafe2(int n)
+
 Returns a *non*-encoded number for strafing `n` encoder ticks reading 2 encoders.
 
 ###unsigned int gyroL(int deg)
-Returns an encoded number for the
+
+Returns an encoded number for the left side to target the gyro. It reads the gyro sensor specified in `config.c` as `CURRENT_GYRO` and uses `GYRO_P` to calculate the speed the left wheel(s) should turn to accurately turn `deg` number of degrees.
 
 ###unsigned int gyroR(int deg)
-Returns an encoded number for the
+
+Returns an encoded number for the right side to target the gyro. It reads the gyro sensor specified in `config.c` as `CURRENT_GYRO` and uses `GYRO_P` to calculate the speed the right wheel(s) should turn to accurately turn `deg` number of degrees.
 
 ###unsigned int enc2(int distL, int distR)
-Returns an encoded number for the
+
+Returns an encoded number for the left and right sides to go to their individual target encoder distances. It reads the left and right encoders (specified in `config.c`) and `ENC_DRV_P` to calculate the speeds the wheels should turn to accurately reach the setpoints.
 
 ###unsigned int enc1Spd(int dist, int spd)
-Returns an encoded number for the
+
+Returns an encoded number for the left and right sides to go to the target encoder distance. It reads the left and right encoders (specified in `config.c`) and `ENC_DRV_P` to calculate the speeds the wheels should turn to accurately reach the setpoints. The max speed for each side is specified in `spd`.
 
 ###unsigned int liftPreset(T_PRESETS height)
-Returns an encoded number for the
+
+Returns an encoded number for the left and right sides of the lift to go toward the height specified.
 
 
 #License
