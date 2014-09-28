@@ -174,12 +174,12 @@ potReverse(2048); //Returns 2047
 
 ###int potPosition(int numOfOptions, int potentiometer)
 
+- `int numOfOptions` is a number from `0` - `4095` that this function allows as a range.
+- `int potentiometer` is a number from `0` - `4095` that this function scales.
+
 This function checks how far the potentiometer is turned compared to how many options number allowed.
 
 (Technically, this can scale any number from `0` - `4095`, but it is commonly used for potentiometers.)
-
-- `int numOfOptions` is a number from `0` - `4095` that this function allows as a range.
-- `int potentiometer` is a number from `0` - `4095` that this function scales.
 
 For example, `potPosition(100, variable)` returns a number between `0` and `99`, proportional to how large `variable` is.
 
