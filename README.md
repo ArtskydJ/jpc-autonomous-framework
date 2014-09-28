@@ -5,7 +5,7 @@ An autonomous framework for vex teams using [RobotC](http://www.robotc.net)...
 
 The point of this project is so that VEX teams can use this code and write autonomous routines easily. I am disappointed by the lack of autonomous routines in VEX. I hope that this will help people to see that writing routines is not hard. I also hope that teams will contribute to this project, which helps out other teams by doing so.
 
-This was also an entry for [jpearman's 2014 programming challenge](http://www.vexforum.com/showthread.php?t=81887).
+This was an entry for [jpearman's 2014 programming challenge](http://www.vexforum.com/showthread.php?t=81887).
 
 - [How to Use](#how-to-use)
 - [Contributing](#contributing)
@@ -40,15 +40,15 @@ This was also an entry for [jpearman's 2014 programming challenge](http://www.ve
 
 First, when commenting or asking questions, please do not be vague.
 
-If you see a typo or want to add documentation, please click the edit button on [github](https://github.com/ArtskydJ/jpc-autonomous-framework), (it looks like a pencil,) and edit the file. That will send me a pull request, and I will merge it when I get the chance.
+If you see a typo or want to add documentation, please [click here to edit](https://github.com/ArtskydJ/jpc-autonomous-framework/edit/master/README.md) on github.com. Commit it, send me a pull request, and I will merge it when I get the chance.
 
 If you want to add/modify/delete code; go ahead, then make a pull request, and tell me what your code does.
 
-If you have a question; create an issue on github. That way, the community can be involved. If it is about the *way* the code works, an issue is probably the way to go. If it is about *how* the code works, check the documentation, then create an issue.
+If you have a question; create an issue on github. That way, the community can be involved. Please check the documentation to avoid utter humiliation. ;)
 
 If you find a bug; create an issue on github, or fix it and send a pull request. Or both.
 
-If you have concerns that this will help teams that don't know how to program, keep those concerns to yourself! VEX is about learning.
+If you have concerns that this will help teams that don't know how to program, keep those concerns to yourself! VEX is about learning!
 
 #Basic API
 
@@ -65,7 +65,7 @@ The basic API has all the functions you should need. If you want more, check out
 - `int backRight` is the target speed for the back right motor(s). Negative for reverse.
 
 ```c
-driveFlFrBlBr(10, FWD, FWD, FWD, FWD);
+driveFlFrBlBr(10, FWD, FWD, FWD, FWD); //Drive forward
 ```
 
 ###void driveLeftRightStrafe(int slewRate, int left, int right, int strafe)
@@ -75,8 +75,10 @@ driveFlFrBlBr(10, FWD, FWD, FWD, FWD);
 - `int right` is the target speed for the left side. Negative for reverse.
 - `int strafe` is the target strafing speed. Negative for left.
 
+If you run this once with a preset distance, don't expect this to work. This has to be run in a loop to accurately target a certain distance. Don't worry; the looping is done automatically in the built in `auto()` function.
+
 ```c
-driveLeftRightStrafe(10, FWD, FWD, 0);
+driveLeftRightStrafe(10, FWD, FWD, 0); //Drive forward
 ```
 
 ###void driveForwardTurnStrafe(int slewRate, int forward, int turn, int strafe)
@@ -86,17 +88,21 @@ driveLeftRightStrafe(10, FWD, FWD, 0);
 - `int turn` is the target turning speed. Negative for left.
 - `int strafe` is the target strafing speed. Negative for left.
 
+If you run this once with a preset distance, don't expect this to work. This has to be run in a loop to accurately target a certain distance. Don't worry; the looping is done automatically in the built in `auto()` function.
+
 ```c
-driveForwardTurnStrafe(10, FWD, LEFT, 0);
+driveForwardTurnStrafe(10, FWD, 0, 0); //Drive forward
 ```
 
 ###void liftSpeeds(int slewRate, unsigned int both)
 
 - `int slewRate` is the rate at which the motor approaches its target.
-- `unsigned int both` holds the speeds for both sides of the lift. The speeds are encoded. (See [Autonomous Functions](#autonomous-functions) for details.)
+- `unsigned int both` holds the speeds for both sides of the lift. The speeds are encoded. (See [Autonomous Functions](#autonomous-functions) for details of encoding.)
+
+If you run this once with a preset height, don't expect this to work. This has to be run in a loop to accurately target a certain height. Don't worry; the looping is done automatically in the built in `auto()` function.
 
 ```c
-liftSpeeds(10, encode(FWD, FWD));
+liftSpeeds(10, encode(FWD, FWD)); //Lift forward
 ```
 
 ###void intakeSpeed(int slewRate, int target)
@@ -105,7 +111,7 @@ liftSpeeds(10, encode(FWD, FWD));
 - `int target` is the target speed. Negative for reverse.
 
 ```c
-intakeSpeed(10, FWD);
+intakeSpeed(10, FWD); //Intake forward
 ```
 
 ##Utility Functions
@@ -175,7 +181,7 @@ This function checks how far the potentiometer is turned compared to how many op
 - `int numOfOptions` is a number from `0` - `4095` that this function allows as a range.
 - `int potentiometer` is a number from `0` - `4095` that this function scales.
 
-For example, `potPosition(100, [number])` returns a number between `0` and `99`, proportional to how large `[number]` is.
+For example, `potPosition(100, variable)` returns a number between `0` and `99`, proportional to how large `variable` is.
 
 ```c
 potPosition(3, 0);    //Returns 0
@@ -196,7 +202,7 @@ potPosition(3, 4095); //Returns 2
 - `int now` is the value that is targetting `target`. (Note that this variable is not changed. A new integer is returned.)
 - `int rate` is the rate at which `now` reaches `target`.
 
-Calculates a new speed using target, current speed (`now`), and rate of slew.
+Calculates a new speed using the target speed, current speed (`now`), and rate of slew.
 
 See wikipedia article on [slew](https://en.wikipedia.org/wiki/Slew_rate).
 
@@ -223,8 +229,8 @@ slew(-100, -90, 10) //Returns -100
 
 ###int buttonsToSpeed(TVexJoysticks forwardButton, TVexJoysticks reverseButton)
 
-- `TVexJoysticks forwardButton` is the button that (if pressed) will make the function return `127`.
-- `TVexJoysticks reverseButton` is the button that (if pressed) will make the function return `-127`.
+- `TVexJoysticks forwardButton` is the button that will make the function return `127` when pressed.
+- `TVexJoysticks reverseButton` is the button that will make the function return `-127` when pressed.
 
 Turns two buttons (up/down or left/right) into a motor speed.
 
@@ -232,17 +238,17 @@ Turns two buttons (up/down or left/right) into a motor speed.
 buttonsToSpeed(Btn6U, Btn6D);
 ```
 
-Returns `127` if 6U is pressed and 6D is not.
-Returns `-127` if 6U is not pressed and 6D is.
-Returns `0` if 6U and 6D are both not pressed, or both pressed.
+Returns `127` if `6U` is pressed and `6D` is not.  
+Returns `-127` if `6U` is not pressed and `6D` is.  
+Returns `0` if `6U` and `6D` are both not pressed, or both pressed.
 
 ```c
 buttonsToSpeed(Btn8L, Btn8R);
 ```
 
-Returns `127` if 8L is pressed and 8R is not.
-Returns `-127` if 8L is not pressed and 8R is.
-Returns `0` if 8L and 8R are both not pressed, or both pressed.
+Returns `127` if `8L` is pressed and `8R` is not.  
+Returns `-127` if `8L` is not pressed and `8R` is.  
+Returns `0` if `8L` and `8R` are both not pressed, or both pressed.
 
 ##Autonomous Functions
 
@@ -306,14 +312,14 @@ Aliases: `encode(0, r)`, `encodeR(r)`
 
 ###unsigned int gyro2(int deg)
 
-- `int deg`
+- `int deg` is the number of degrees the robot is supposed to turn in that step.
 
 Returns an encoded number for the left side to go one way and the right side to go the other. It reads the gyro sensor specified in `config.c` as `CURRENT_GYRO` and uses `GYRO_P` to calculate the speeds the wheels should turn to accurately turn `deg` number of degrees.
 
 
 ###unsigned int enc(int dist)
 
-- `int dist`
+- `int dist` is the number of encoder ticks the robot is supposed to travel in that step.
 
 Returns an encoded number for the left and right sides to go to the target encoder distance. It reads the left and right encoders specified in `config.c` as `CURRENT_LEFT_ENC` and `CURRENT_RIGHT_ENC` and uses `ENC_DRV_P` to calculate the speeds the wheels should turn to accurately reach the setpoints.
 
@@ -323,7 +329,7 @@ Alias: `enc2(dist, dist)`, `enc1Spd(dist, FWD)`
 
 #Advanced API
 
-If you're not satisfied with the [Basic API](#basic-api), and just want more, you've come the the right place; the Advanced API!
+Such advanced. Much wow.
 
 ##Motor Functions
 
@@ -420,13 +426,13 @@ Returns an encoded number for the left and right sides to go to their individual
 ###unsigned int enc1Spd(int dist, int spd)
 
 - `int dist` is the number of encoder ticks the robot is supposed to travel in that step.
-- `int spd` is the maximum speed the robot will go during that step. (If it is set as `99`, the max speed is `99` and the max reverse speed is `-99`.)
+- `int spd` is the maximum speed the robot will go during that step. (If it is set as `99`, the max speed is `99`, and the max reverse speed is `-99`.)
 
 Returns an encoded number for the left and right sides to go to the target encoder distance. It reads the left and right encoders (specified in `config.c`) and `ENC_DRV_P` to calculate the speeds the wheels should turn to accurately reach the setpoints. The max speed for each side is specified in `spd`.
 
 ###unsigned int liftPreset(T_PRESETS height)
 
-`T_PRESETS height` is a custom defined type of variable called `T_PRESETS`. 
+`T_PRESETS height` is a custom defined type of variable called `T_PRESETS` that defines the height target for the lift.
 
 `T_PRESETS` is defined in `config.c` around line 50. You must have these numbers match your lift's heights. Presets can be changed, added, or deleted. (E.g. `GROUND` could be deleted, and/or `WALL` could be added. While adding or deleting any, watch for commas; They'll cause compiler errors if they're missing or if there are too many.)
 
