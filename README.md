@@ -1,10 +1,14 @@
 jpc-autonomous-framework
 ========================
 
-An autonomous framework for vex teams using [RobotC](http://www.robotc.net)
-An entry for [jpearman's 2014 programming challenge](http://www.vexforum.com/showthread.php?t=81887).
+An autonomous framework for vex teams using [RobotC](http://www.robotc.net)...
+
+The point of this project is so that VEX teams can use this code and write autonomous routines easily. I am disappointed by the lack of autonomous routines in VEX. I hope that this will help people to see that writing routines is not hard. I also hope that teams will contribute to this project, which helps out other teams by doing so.
+
+This was also an entry for [jpearman's 2014 programming challenge](http://www.vexforum.com/showthread.php?t=81887).
 
 - [How to Use](#how-to-use)
+- [Contributing](#contributing)
 - [Basic Api](#basic-api)
 	- [Motor Functions](#motor-functions)
 	- [Utility Functions](#utility-functions)
@@ -31,6 +35,20 @@ An entry for [jpearman's 2014 programming challenge](http://www.vexforum.com/sho
 	- If you *do not* have a mecanum or X-drive, you will want to change how strafing works:
 		- If you have an H-drive, you will have to rewrite `driveFlFrBlBr()`, and modify `driveLeftRightStrafe()` and `driveForwardTurnStrafe()` accordingly. If you need help with this, please create an issue on github.
 		- If you don't have strafing, just delete all references to `strafe` in `driveLeftRightStrafe()` and `driveForwardTurnStrafe()`. Again, if you need help, create an issue.
+
+#Contributing
+
+First, when commenting or asking questions, please do not be vague.
+
+If you see a typo or want to add documentation, please click the edit button on [github](https://github.com/ArtskydJ/jpc-autonomous-framework), (it looks like a pencil,) and edit the file. That will send me a pull request, and I will merge it when I get the chance.
+
+If you want to add/modify/delete code; go ahead, then make a pull request, and tell me what your code does.
+
+If you have a question; create an issue on github. That way, the community can be involved. If it is about the *way* the code works, an issue is probably the way to go. If it is about *how* the code works, check the documentation, then create an issue.
+
+If you find a bug; create an issue on github, or fix it and send a pull request. Or both.
+
+If you have concerns that this will help teams that don't know how to program, keep those concerns to yourself! VEX is about learning.
 
 #Basic API
 
@@ -134,9 +152,9 @@ task main() {
 
 ###int potReverse(int potentiometer)
 
-- `int potentiometer` is a number from 0 - 4095 that this function "reverses". (Note that this variable is not changed. A new integer is returned.)
+- `int potentiometer` is a number from `0` - `4095` that this function "reverses". (Note that this variable is not changed. A new integer is returned.)
 
-(Technically, this can "reverse" any number from 0 - 4095, but it is commonly used for potentiometers.)
+(Technically, this can "reverse" any number from `0` - `4095`, but it is commonly used for potentiometers.)
 
 Returns a corrected value for potentiometers that were installed backwards.
 
@@ -152,12 +170,12 @@ potReverse(2048); //Returns 2047
 
 This function checks how far the potentiometer is turned compared to how many options number allowed.
 
-(Technically, this can scale any number from 0 - 4095, but it is commonly used for potentiometers.)
+(Technically, this can scale any number from `0` - `4095`, but it is commonly used for potentiometers.)
 
-- `int numOfOptions` is a number from 0 - 4095 that this function allows as a range.
-- `int potentiometer` is a number from 0 - 4095 that this function scales.
+- `int numOfOptions` is a number from `0` - `4095` that this function allows as a range.
+- `int potentiometer` is a number from `0` - `4095` that this function scales.
 
-For example, `potPosition(100, [number])` returns a number between 0 and 99, proportional to how large `[number]` is.
+For example, `potPosition(100, [number])` returns a number between `0` and `99`, proportional to how large `[number]` is.
 
 ```c
 potPosition(3, 0);    //Returns 0
@@ -205,22 +223,26 @@ slew(-100, -90, 10) //Returns -100
 
 ###int buttonsToSpeed(TVexJoysticks forwardButton, TVexJoysticks reverseButton)
 
-- `TVexJoysticks forwardButton` 
-- `TVexJoysticks reverseButton`
+- `TVexJoysticks forwardButton` is the button that (if pressed) will make the function return `127`.
+- `TVexJoysticks reverseButton` is the button that (if pressed) will make the function return `-127`.
 
 Turns two buttons (up/down or left/right) into a motor speed.
 
 ```c
 buttonsToSpeed(Btn6U, Btn6D);
-//Returns 127 if 6U is pressed and 6D is not.
-//Returns -127 if 6U is not pressed and 6D is.
-//Returns 0 if 6U and 6D are both not pressed, or both pressed.
-
-buttonsToSpeed(Btn8L, Btn8R);
-//Returns 127 if 8L is pressed and 8R is not.
-//Returns -127 if 8L is not pressed and 8R is.
-//Returns 0 if 8L and 8R are both not pressed, or both pressed.
 ```
+
+Returns `127` if 6U is pressed and 6D is not.
+Returns `-127` if 6U is not pressed and 6D is.
+Returns `0` if 6U and 6D are both not pressed, or both pressed.
+
+```c
+buttonsToSpeed(Btn8L, Btn8R);
+```
+
+Returns `127` if 8L is pressed and 8R is not.
+Returns `-127` if 8L is not pressed and 8R is.
+Returns `0` if 8L and 8R are both not pressed, or both pressed.
 
 ##Autonomous Functions
 
@@ -233,11 +255,11 @@ Imagine you have a function that calculates how fast the left and right motors s
 Let's say that the left side is supposed to go a speed of -60, and the right side is supposed to go a speed of 120. 127 is added to both numbers to make them positive. Then the right number is bitshifted and then the numbers are added. The resulting number is returned. See example below:
 
 ```
-l     r       l(hex)  r(hex)   l(binary)  r(binary)          Notes
--60   120                                                    start
-67    247     0x43    0xF7     1000011    11110111           add 127
-67    63232   0x43    0xF700   1000011    1111011100000000   bitshift 'r' 8 bits
-  63299          0xF743            1111011101000011          resulting number
+l   | r     | l(hex) | r(hex) | l(binary)  | r(binary)         | Notes
+-60 | 120   |        |        |            |                   | original numbers
+67  | 247   |  0x43  | 0xF7   |  01000011  | 11110111          | add 127 to both
+67  | 63232 |  0x43  | 0xF700 |  01000011  | 11110111 00000000 | bitshift 'r' 8 bits
+  63299     |     0xF743      |    11110111 01000011           | resulting number
 ```
 
 ###unsigned int stopped()
@@ -254,40 +276,44 @@ Returns an encoded number for both sides going a speed of `spd`.
 Aliases: `encode2(spd)`, `encode(spd, spd)`
 
 
-###unsigned int turn(int spd)
-
-Returns an encoded number for the left side going a speed of `spd`, and the right side going a speed of `-spd`.
-
-Aliases: `encodeNegative2(spd)`, `encode(spd, -spd)`
-
-
 ###unsigned int speeds(int l, int r)
 
-Returns an encoded number for the left side going a speed of `l`, and the right side going a speed of `r`.
+Returns an encoded number for the left to go a speed of `l`, and the right to go going a speed of `r`.
 
 Alias: `encode(l, r)`
 
 
+###unsigned int turn(int spd)
+
+Returns an encoded number for the left to go a speed of `spd`, and the right to go a speed of `-spd`.
+
+Aliases: `encodeNegative2(spd)`, `encode(spd, -spd)`
+
+
 ###unsigned int speedL(int l)
 
-Returns an encoded number for the left side going a speed of `l`, and the right side going a speed of 0.
+Returns an encoded number for the left side going a speed of `l`, and the right side to be stopped.
 
 Aliases: `encode(l, 0)`, `encodeL(l)`
 
 
 ###unsigned int speedR(int r)
 
-Returns an encoded number for the left side going a speed of 0, and the right side going a speed of `r`.
+Returns an encoded number for the left side to be stopped, and the right side going a speed of `r`.
 
 Aliases: `encode(0, r)`, `encodeR(r)`
 
 
 ###unsigned int gyro2(int deg)
 
+- `int deg`
+
 Returns an encoded number for the left side to go one way and the right side to go the other. It reads the gyro sensor specified in `config.c` as `CURRENT_GYRO` and uses `GYRO_P` to calculate the speeds the wheels should turn to accurately turn `deg` number of degrees.
 
 
 ###unsigned int enc(int dist)
+
+- `int dist`
 
 Returns an encoded number for the left and right sides to go to the target encoder distance. It reads the left and right encoders specified in `config.c` as `CURRENT_LEFT_ENC` and `CURRENT_RIGHT_ENC` and uses `ENC_DRV_P` to calculate the speeds the wheels should turn to accurately reach the setpoints.
 
@@ -312,8 +338,8 @@ A wrapper function for [`slew()`](#int-slewint-target-int-now-int-rate) that app
 Please note that these arguments are backwards from the `slew()` function, in which `target` is first and `slewRate` is last.
 
 ```c
-applySlew(10, DRIVE_FL, 100);
-applySlew(10, 0,        100);
+applySlew(10, DRIVE_FL, 100); //Sets motor[DRIVE_FL] 10 power closer to 100
+applySlew(10, 0,        100); //Sets motor[0] 10 power closer to 100
 ```
 
 
@@ -323,7 +349,7 @@ Forgot how encoding works? Check out the [explanation](#autonomous-functions).
 
 ###unsigned int encode(int l, int r)
 
-This function produces the encoded value from two numbers ranging from -127 - 127, and returns it as an `unsigned int`.
+This function produces the encoded value from two numbers ranging from `-127` - `127`, and returns it as an `unsigned int`.
 
 ###unsigned int encode2(int lr)
 
@@ -362,32 +388,56 @@ decodeL( encode(100, 99) ); //Returns 99
 
 ###int encStrafe1(int n)
 
+- `int n` is the number of encoder ticks the robot is supposed to travel in that step.
+
 Returns a *non*-encoded number for strafing `n` encoder ticks reading 1 encoder.
 
 ###int encStrafe2(int n)
+
+- `int n` is the number of encoder ticks the robot is supposed to travel in that step.
 
 Returns a *non*-encoded number for strafing `n` encoder ticks reading 2 encoders.
 
 ###unsigned int gyroL(int deg)
 
+- `int deg` is the number of degrees the robot is supposed to turn in that step.
+
 Returns an encoded number for the left side to target the gyro. It reads the gyro sensor specified in `config.c` as `CURRENT_GYRO` and uses `GYRO_P` to calculate the speed the left wheel(s) should turn to accurately turn `deg` number of degrees.
 
 ###unsigned int gyroR(int deg)
+
+- `int deg` is the number of degrees the robot is supposed to turn in that step.
 
 Returns an encoded number for the right side to target the gyro. It reads the gyro sensor specified in `config.c` as `CURRENT_GYRO` and uses `GYRO_P` to calculate the speed the right wheel(s) should turn to accurately turn `deg` number of degrees.
 
 ###unsigned int enc2(int distL, int distR)
 
+- `int distL` is the number of encoder ticks the robot's left side is supposed to travel in that step.
+- `int distR` is the number of encoder ticks the robot's right side is supposed to travel in that step.
+
 Returns an encoded number for the left and right sides to go to their individual target encoder distances. It reads the left and right encoders (specified in `config.c`) and `ENC_DRV_P` to calculate the speeds the wheels should turn to accurately reach the setpoints.
 
 ###unsigned int enc1Spd(int dist, int spd)
+
+- `int dist` is the number of encoder ticks the robot is supposed to travel in that step.
+- `int spd` is the maximum speed the robot will go during that step. (If it is set as `99`, the max speed is `99` and the max reverse speed is `-99`.)
 
 Returns an encoded number for the left and right sides to go to the target encoder distance. It reads the left and right encoders (specified in `config.c`) and `ENC_DRV_P` to calculate the speeds the wheels should turn to accurately reach the setpoints. The max speed for each side is specified in `spd`.
 
 ###unsigned int liftPreset(T_PRESETS height)
 
+`T_PRESETS height` is a custom defined type of variable called `T_PRESETS`. 
+
+`T_PRESETS` is defined in `config.c` around line 50. You must have these numbers match your lift's heights. Presets can be changed, added, or deleted. (E.g. `GROUND` could be deleted, and/or `WALL` could be added. While adding or deleting any, watch for commas; They'll cause compiler errors if they're missing or if there are too many.)
+
 Returns an encoded number for the left and right sides of the lift to go toward the height specified.
 
+```c
+while(not_complete) {
+	liftSpeeds(10, liftPreset(MED_POST));
+}
+```
+Raise/lower lift to medium post height with a slew of 10.
 
 #License
 
