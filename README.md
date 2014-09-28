@@ -229,8 +229,8 @@ slew(-100, -90, 10) //Returns -100
 
 ###int buttonsToSpeed(TVexJoysticks forwardButton, TVexJoysticks reverseButton)
 
-- `TVexJoysticks forwardButton` is the button that will make the function return `127` when pressed.
-- `TVexJoysticks reverseButton` is the button that will make the function return `-127` when pressed.
+- `TVexJoysticks forwardButton` is the button that causes `127` to be returned when pressed.
+- `TVexJoysticks reverseButton` is the button that causes `-127` to be returned when pressed.
 
 Turns two buttons (up/down or left/right) into a motor speed.
 
@@ -251,6 +251,8 @@ Returns `-127` if `8L` is not pressed and `8R` is.
 Returns `0` if `8L` and `8R` are both not pressed, or both pressed.
 
 ##Autonomous Functions
+
+###How Encoded values work:
 
 The functions in this section return encoded values. These values have two motor speeds encoded inside them. These values are `unsigned int`s. This is how it works:
 
@@ -440,10 +442,9 @@ Returns an encoded number for the left and right sides of the lift to go toward 
 
 ```c
 while(not_complete) {
-	liftSpeeds(10, liftPreset(MED_POST));
+	liftSpeeds(10, liftPreset(MED_POST)); //Raise/lower lift to medium post height with a slew of 10.
 }
 ```
-Raise/lower lift to medium post height with a slew of 10.
 
 #License
 
