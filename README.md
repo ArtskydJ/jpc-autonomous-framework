@@ -94,6 +94,10 @@ intakeSpeed(10, FWD);
 
 ###int rangeLimit(int min, int value, int max)
 
+- `int min` is the minimum value that `rangeLimit()` will return
+- `int value` is the value in question. (Note that this variable is not changed. A new integer is returned.)
+- `int max` is the maximum value that `rangeLimit()` will return.
+
 Returns the value between min and max. If it is already between min and max, the same value will be returned.
 
 ```c
@@ -130,6 +134,10 @@ task main() {
 
 ###int potReverse(int potentiometer)
 
+- `int potentiometer` is a number from 0 - 4095 that this function "reverses". (Note that this variable is not changed. A new integer is returned.)
+
+(Technically, this can "reverse" any number from 0 - 4095, but it is commonly used for potentiometers.)
+
 Returns a corrected value for potentiometers that were installed backwards.
 
 ```c
@@ -144,6 +152,11 @@ potReverse(2048); //Returns 2047
 
 This function checks how far the potentiometer is turned compared to how many options number allowed.
 
+(Technically, this can scale any number from 0 - 4095, but it is commonly used for potentiometers.)
+
+- `int numOfOptions` is a number from 0 - 4095 that this function allows as a range.
+- `int potentiometer` is a number from 0 - 4095 that this function scales.
+
 For example, `potPosition(100, [number])` returns a number between 0 and 99, proportional to how large `[number]` is.
 
 ```c
@@ -156,10 +169,14 @@ potPosition(3, 2730);  //Returns 1
 potPosition(3, 2731); //Returns 2
 potPosition(3, 3000); //Returns 2
 potPosition(3, 4000); //Returns 2
-potPosition(3, 4096); //Returns 2
+potPosition(3, 4095); //Returns 2
 ```
 
 ###int slew(int target, int now, int rate)
+
+- `int target` is the value that `now` goes toward.
+- `int now` is the value that is targetting `target`. (Note that this variable is not changed. A new integer is returned.)
+- `int rate` is the rate at which `now` reaches `target`.
 
 Calculates a new speed using target, current speed (`now`), and rate of slew.
 
@@ -187,6 +204,9 @@ slew(-100, -90, 10) //Returns -100
 ```
 
 ###int buttonsToSpeed(TVexJoysticks forwardButton, TVexJoysticks reverseButton)
+
+- `TVexJoysticks forwardButton` 
+- `TVexJoysticks reverseButton`
 
 Turns two buttons (up/down or left/right) into a motor speed.
 
