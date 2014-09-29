@@ -44,7 +44,7 @@ If you see a typo or want to add documentation, please [click here to edit](http
 
 If you want to add/modify/delete code; go ahead, then make a pull request, and tell me what your code does.
 
-If you have a question; create an issue on github. That way, the community can be involved. Please check the documentation to avoid utter humiliation. ;)
+If you have a question; create an issue on github. That way, the community can be involved. Please check the documentation to avoid embarrassment. ;-)
 
 If you find a bug; create an issue on github, or fix it and send a pull request. Or both.
 
@@ -167,8 +167,8 @@ Returns a corrected value for potentiometers that were installed backwards.
 ```c
 potReverse(1234); //Returns 2861
 potReverse(2861); //Returns 1234
-potReverse(0);    //Returns 4096
-potReverse(4096); //Returns 0
+potReverse(0);    //Returns 4095
+potReverse(4095); //Returns 0
 potReverse(2048); //Returns 2047
 ```
 
@@ -263,12 +263,13 @@ Imagine you have a function that calculates how fast the left and right motors s
 Let's say that the left side is supposed to go a speed of -60, and the right side is supposed to go a speed of 120. 127 is added to both numbers to make them positive. Then the right number is bitshifted and then the numbers are added. The resulting number is returned. See example below:
 
 ```
-l   | r     | l(hex) | r(hex) | l(binary)  | r(binary)         | Notes
--60 | 120   |        |        |            |                   | original numbers
-67  | 247   |  0x43  | 0xF7   |  01000011  | 11110111          | add 127 to both
-67  | 63232 |  0x43  | 0xF700 |  01000011  | 11110111 00000000 | bitshift 'r' 8 bits
-  63299     |     0xF743      |    11110111 01000011           | resulting number
-```
+| l   | r     | l(hex) | r(hex) | l(binary)  | r(binary)         | Notes               |
+|:----|:------|:-------|:-------|:-----------|:------------------|:--------------------|
+| -60 | 120   |        |        |            |                   | original numbers    |
+| 67  | 247   |  0x43  | 0xF7   |  01000011  | 11110111          | add 127 to both     |
+| 67  | 63232 |  0x43  | 0xF700 |  01000011  | 11110111 00000000 | bitshift 'r' 8 bits |
+|   63299     |     0xF743      |    11110111 01000011           | resulting number    |
+
 
 ###unsigned int stopped()
 
