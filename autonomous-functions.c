@@ -66,7 +66,7 @@ bool endAuto() {
 		//clear screen or beep or whatever you want
 		//running resetAuto() now would loop the autonomous routine
 	}
-	return (runningStepNum < thisStepNum)
+	return (runningStepNum < thisStepNum);
 }
 
 void auto(unsigned int driveLR, int driveStrafe, unsigned int liftLR, int intake, T_END_TYPES endType, int endTime) {

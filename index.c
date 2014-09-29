@@ -101,7 +101,7 @@ task autonomous() {
 		auto(straight(FWD),   0,       stopped(),    FWD,     TIME_LIMIT,  1000); //Forward
 		auto(straight(REV),   0,       stopped(),    0,       TIME_LIMIT,  1000); //Reversed
 		auto(stopped(),       LEFT,    straight(60), 0,       TIME_LIMIT,  1000); //Turn left with left wheels
-		auto(turn2(-64),      0,       stopped(),    0,       TIME_LIMIT,  1000); //Zero-turn half speed
+		auto(turn(-64),      0,       stopped(),    0,       TIME_LIMIT,  1000); //Zero-turn half speed
 		auto(straight(BRAKE), 0,       stopped(),    0,       TIME_LIMIT,  200);  //Brake
 		auto(straight(-BRAKE),0,       stopped(),    0,       TIME_LIMIT,  200);  //Brake
 		runningAuto = endAuto();
