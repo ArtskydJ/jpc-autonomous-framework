@@ -262,12 +262,12 @@ Imagine you have a function that calculates how fast the left and right motors s
 
 Let's say that the left side is supposed to go a speed of -60, and the right side is supposed to go a speed of 120. 127 is added to both numbers to make them positive. Then the right number is bitshifted and then the numbers are added. The resulting number is returned. See example below:
 
-| l   | r     | l(hex) | r(hex) | l(binary)  | r(binary)         | Notes               |
-|:---:|:-----:|:------:|:------:|:----------:|:-----------------:|:--------------------|
-| -60 | 120   |        |        |            |                   | original numbers    |
-| 67  | 247   |  0x43  | 0xF7   |  01000011  | 11110111          | add 127 to both     |
-| 67  | 63232 |  0x43  | 0xF700 |  01000011  | 11110111 00000000 | bitshift 'r' 8 bits |
-| └─► | 63299 |   └─►  | 0xF743 |     └─►    | 11110111 01000011 | add 'l' and 'r'     |
+| l   | r     |l (hex)| r (hex)| l (binary)| r (binary)        | Notes               |
+|:---:|:-----:|:-----:|:------:|:---------:|:-----------------:|:--------------------|
+| -60 | 120   |       |        |           |                   | original numbers    |
+| 67  | 247   |  0x43 | 0xF7   |  01000011 | 11110111          | add 127 to both     |
+| 67  | 63232 |  0x43 | 0xF700 |  01000011 | 11110111 00000000 | bitshift 'r' 8 bits |
+|  └► | 63299 |    └► | 0xF743 |     └►    | 11110111 01000011 | add 'l' and 'r'     |
 
 
 ###unsigned int stopped()
