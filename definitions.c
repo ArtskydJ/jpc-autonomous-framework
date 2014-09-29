@@ -30,7 +30,7 @@
 #define RIGHT   127  //Turning
 #define IN    (-127) //Intake
 #define OUT     127  //Intake
-#define FULL    127  //Max speex
+#define FULL    127  //Max speed
 #define HALF    64   //Half of max speed
 #define BRAKE   5    //Braking motor power
 #define MOTOR_ALLOW_ZONE 30 //Allowable speed for going to next step.
