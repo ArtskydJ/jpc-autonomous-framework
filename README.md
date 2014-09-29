@@ -69,6 +69,8 @@ If you have concerns that this will help teams that don't know how to program, k
 
 ##`#define`s
 
+These can be used anywhere.
+
 | Name             | Value  | Description
 |:-----------------|:------:|:-----------------|
 | FWD              |   127  | Drive direction
