@@ -267,7 +267,7 @@ Let's say that the left side is supposed to go a speed of -60, and the right sid
 | -60 | 120   |        |        |            |                   | original numbers    |
 | 67  | 247   |  0x43  | 0xF7   |  01000011  | 11110111          | add 127 to both     |
 | 67  | 63232 |  0x43  | 0xF700 |  01000011  | 11110111 00000000 | bitshift 'r' 8 bits |
-| --> | 63299 |   -->  | 0xF743 |     -->    | 11110111 01000011 | resulting number    |
+| ==> | 63299 |   ==>  | 0xF743 |     ==>    | 11110111 01000011 | add 'l' and 'r'     |
 
 
 ###unsigned int stopped()
