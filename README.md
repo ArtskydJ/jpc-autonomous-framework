@@ -102,7 +102,7 @@ These can be used anywhere.
 - `LIFT_MOTORS` - End when lift motors are going slow, and then add `endTime`. (I.E., They reached their target position(s).)
 - `INTAKE_MOTORS` - End when intake motors are going slow, and then add `endTime`. (I.E., They reached their target position.)
 - `ALL_MOTORS` - End when the drive, lift, and intake motors are going slow, and then add `endTime`. (I.E., They all reached their respective target positions.)
-- `NUM_OF_END_TYPES` - In this case, `5`. Do not use for `endType`.
+- `NUM_OF_END_TYPES` - In this case, `5`. Do not use in [`auto()`][auto] as an `endType`.
 
 
 
