@@ -33,8 +33,8 @@ This was an entry for [jpearman's 2014 programming challenge](http://www.vexforu
 	- If you know what proportional, slew, and other constants you want, enter them now.
 5. Open `motor-functions.c`. Change the motor names in the following functions:
 	- In [`driveFlFrBlBr()`][driveFlFrBlBr] change `DRIVE_FL` down to `DRIVE_BR2`.
-	- In [`liftSpeeds()`] change `LIFT_L` and `LIFT_R`.
-	- In [`intakeSpeed()`] change `INTK_L` and `INTK_R`.
+	- In [`liftSpeeds()`][liftSpeeds] change `LIFT_L` and `LIFT_R`.
+	- In [`intakeSpeed()`][intakeSpeed] change `INTK_L` and `INTK_R`.
 	- If you *do not* have a mecanum or X-drive, you will want to change how strafing works:
 		- If you have an H-drive, you will have to rewrite [`driveFlFrBlBr()`][driveFlFrBlBr], and modify [`driveLeftRightStrafe()`][driveLeftRightStrafe] and [`driveForwardTurnStrafe()`][driveForwardTurnStrafe] accordingly. If you need help with this, please create an issue on github.
 		- If you don't have strafing, just delete all references to `strafe` in [`driveLeftRightStrafe()`][driveLeftRightStrafe] and [`driveForwardTurnStrafe()`][driveForwardTurnStrafe]. Again, if you need help, create an issue.
@@ -573,3 +573,5 @@ Copyright (c) 2014, Joseph Dykstra
 [driveForwardTurnStrafe]: #void-driveforwardturnstrafeint-slewrate-int-forward-int-turn-int-strafe
 [driveLeftRightStrafe]: #void-driveleftrightstrafeint-slewrate-int-left-int-right-int-strafe
 [solenoid]: #void-solenoidint-sensor-t_solenoid_opts-targetstate
+[liftSpeeds]: #void-liftSpeedsint-slewRate-unsigned-int-both
+[intakeSpeed]: #void-intakeSpeedint-slewRate-int-target
