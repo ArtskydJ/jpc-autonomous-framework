@@ -46,7 +46,9 @@
 //Other
 #define LOOP_TIME_MS 15     //17 ms interval between motor updates I think
 #define LINE_TARGET 2000    //Line follower target
-#define FOLLOW  100         //Line following target speed
+#define FOLLOW 100          //Line following target speed
+#define STRAFE              //Comment out to disable strafing
+//#define H_DRIVE           //Comment out to use mecanum or x-drive instead of an h-drive
 
 //Preset lift heights
 typedef enum {

@@ -28,16 +28,16 @@ This was an entry for [jpearman's 2014 programming challenge](http://www.vexforu
 2. Fork this project and clone your fork to your computer.
 3. Open `index.c` and enter all your motors and sensors.
 4. Open `config.c` and enter your configuration:
-	- Enter your sensor config into the `#define`s. (Should be around line 30.)
+	- Enter your sensor config into the `#define`s. (Should be around line 25.)
 	- Enter your lift presets into the `T_PRESETS` enum. (Should be around line 55.)
+	- Comment out the definition of `STRAFE` if you have a tank drive.
+	- Un-comment out the definition of `H_DRIVE` if you have an H-Drive.
 	- If you know what proportional, slew, and other constants you want, enter them now.
 5. Open `motor-functions.c`. Change the motor names in the following functions:
 	- In [`driveFlFrBlBr()`][driveFlFrBlBr] change `DRIVE_FL` down to `DRIVE_BR2`.
+	- If you have an H-Drive, change `DRIVE_L1` through `DRIVE_L2`.
 	- In [`liftSpeeds()`] change `LIFT_L` and `LIFT_R`.
 	- In [`intakeSpeed()`] change `INTK_L` and `INTK_R`.
-	- If you *do not* have a mecanum or X-drive, you will want to change how strafing works:
-		- If you have an H-drive, you will have to rewrite [`driveFlFrBlBr()`][driveFlFrBlBr], and modify [`driveLeftRightStrafe()`][driveLeftRightStrafe] and [`driveForwardTurnStrafe()`][driveForwardTurnStrafe] accordingly. If you need help with this, please create an issue on github.
-		- If you don't have strafing, just delete all references to `strafe` in [`driveLeftRightStrafe()`][driveLeftRightStrafe] and [`driveForwardTurnStrafe()`][driveForwardTurnStrafe]. Again, if you need help, create an issue.
 
 
 
@@ -182,7 +182,7 @@ intakeSpeed(10, FWD); //Intake forward
 - `int value` is the value in question. (Note that this variable is not changed. A new integer is returned.)
 - `int max` is the maximum value that `rangeLimit()` will return.
 
-Returns the value between min and max. If it is already between min and max, the same value will be returned.
+Returns the value between min and max. If it is already between min and max, the same value will be returned. If min is larger than max, then the values are swapped.
 
 ```c
        //min val max
@@ -222,7 +222,7 @@ task main() {
 
 (Technically, this can "reverse" any number from `0` - `4095`, but it is commonly used for potentiometers.)
 
-Returns a corrected value for potentiometers that were installed backwards.
+Returns a corrected value for potentiometers that were installed backwards. Range limits the returned value between `0` and `4095`.
 
 ```c
 potReverse(1234); //Returns 2861
@@ -243,6 +243,8 @@ This function checks how far the potentiometer is turned compared to how many op
 
 For example, `potPosition(100, variable)` returns a number between `0` and `99`, proportional to how large `variable` is.
 
+Range limits the returned value between `0` and `numOfOptions-1`.
+
 ```c
 potPosition(3, 0);    //Returns 0
 potPosition(3, 1000); //Returns 0
@@ -262,7 +264,7 @@ potPosition(3, 4095); //Returns 2
 - `int now` is the value that is targetting `target`. (Note that this variable is not changed. A new integer is returned.)
 - `int rate` is the rate at which `now` reaches `target`.
 
-Calculates a new speed using the target speed, current speed (`now`), and rate of slew.
+Calculates a new speed using the target speed, current speed (`now`), and rate of slew. Range limits the returned value between `REV` and `FWD`.
 
 See wikipedia article on [slew](https://en.wikipedia.org/wiki/Slew_rate).
 
@@ -282,15 +284,20 @@ slew(127,  110, 10) //Returns 120
 slew(127,  120, 10) //Returns 127
 
 //target,  now, rate
+slew(129,  120, 10) //Returns 127
+slew(-129,-120, 10) //Returns -127
+
+//target,  now, rate
 slew(-100, -70, 10) //Returns -80
 slew(-100, -80, 10) //Returns -90
 slew(-100, -90, 10) //Returns -100
 ```
 
-###int buttonsToSpeed(TVexJoysticks forwardButton, TVexJoysticks reverseButton)
+###int buttonsToSpeed(TVexJoysticks forwardBtn, TVexJoysticks reverseBtn, int holdPower=0)
 
-- `TVexJoysticks forwardButton` is the button that causes `127` to be returned when pressed.
-- `TVexJoysticks reverseButton` is the button that causes `-127` to be returned when pressed.
+- `TVexJoysticks forwardBtn` is the button that causes `127` to be returned when pressed.
+- `TVexJoysticks reverseBtn` is the button that causes `-127` to be returned when pressed.
+- `int holdPower` is the value returned if `forwardBtn` and `reverseBtn` are both not pressed or both pressed. Useful for default lift holding power, or similar.
 
 Turns two buttons (up/down or left/right) into a motor speed.
 
@@ -303,12 +310,12 @@ Returns `-127` if `6U` is not pressed and `6D` is.
 Returns `0` if `6U` and `6D` are both not pressed, or both pressed.
 
 ```c
-buttonsToSpeed(Btn8L, Btn8R);
+buttonsToSpeed(Btn8L, Btn8R, 45);
 ```
 
 Returns `127` if `8L` is pressed and `8R` is not.  
 Returns `-127` if `8L` is not pressed and `8R` is.  
-Returns `0` if `8L` and `8R` are both not pressed, or both pressed.
+Returns `45` if `8L` and `8R` are both not pressed, or both pressed.
 
 
 ##Autonomous Functions

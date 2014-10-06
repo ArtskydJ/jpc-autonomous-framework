@@ -21,53 +21,95 @@
 
 //Modify this file with your motor names.
 
-//Prototype
-void applySlew(int slewRate, int mtr, int target);
-
-///////////////////////////////// MODIFY BELOW /////////////////////////////////
-//Drive: Front left, Front right, Back left, Back right
-void driveFlFrBlBr(int slewRate, int frontLeft, int frontRight, int backLeft, int backRight) {
-	applySlew(slewRate, DRIVE_FL, frontLeft);
-	applySlew(slewRate, DRIVE_FR, frontRight);
-	applySlew(slewRate, DRIVE_BL1, backLeft);
-	applySlew(slewRate, DRIVE_BL2, backLeft);
-	applySlew(slewRate, DRIVE_BR1, backRight);
-	applySlew(slewRate, DRIVE_BR2, backRight);
-}
-
-//Lift: Left, Right
-void liftSpeeds(int slewRate, unsigned int both) {
-	applySlew(slewRate, LIFT_L, decodeL(both));
-	applySlew(slewRate, LIFT_R, decodeR(both));
-}
-
-//Intake
-void intakeSpeed(int slewRate, int target) {
-	applySlew(slewRate, INTK_L, target);
-	applySlew(slewRate, INTK_R, target);
-}
-///////////////////////////////// MODIFY ABOVE /////////////////////////////////
-
 void applySlew(int slewRate, int mtr, int target) { //has a prototype, so it can
 	motor[mtr] = slew(target, motor[mtr], slewRate); //be declared after it's used
 }
 
-void driveLeftRightStrafe(int slewRate, int left, int right, int strafe) {
-	driveFlFrBlBr(
+///////////////////////////////// MODIFY BELOW /////////////////////////////////
+//Drive: Front left, Front right, Back left, Back right
+void driveFlFrBlBr(int slewRate, int frontLeft, int frontRight, int backLeft, int backRight) {
+	applySlew(slewRate, DRIVE_FL, frontLeft); //MODIFY HERE...
+	applySlew(slewRate, DRIVE_FR, frontRight);
+	applySlew(slewRate, DRIVE_BL1, backLeft); //Instead of DRIVE_BL1, etc; put in your own motor names
+	applySlew(slewRate, DRIVE_BL2, backLeft); //If you have a 4 motor drive, delete this line and the line below this
+	applySlew(slewRate, DRIVE_BR1, backRight);
+	applySlew(slewRate, DRIVE_BR2, backRight); //...THROUGH HERE
+}
+#ifdef STRAFE
+	#ifdef H_DRIVE
+		void driveHDrive(int slewRate, int left, int right, int strafe) {
+			applySlew(slewRate, DRIVE_L1, left); //MODIFY HERE...
+			applySlew(slewRate, DRIVE_L2, left);
+			applySlew(slewRate, DRIVE_R1, right); //Instead of DRIVE_R1, etc; put in your own motor names
+			applySlew(slewRate, DRIVE_R2, right);
+			applySlew(slewRate, DRIVE_S1, strafe);
+			applySlew(slewRate, DRIVE_S2, strafe); //...THROUGH HERE
+		}
+	#endif
+#endif
+
+//Lift: Left, Right
+void liftSpeeds(int slewRate, unsigned int both) {
+	applySlew(slewRate, LIFT_L, decodeL(both)); //MODIFY LIFT_L...
+	applySlew(slewRate, LIFT_R, decodeR(both)); //...AND LIFT_R
+}
+
+//Intake
+void intakeSpeed(int slewRate, int target) {
+	applySlew(slewRate, INTK_L, target); //MODIFY INKT_L...
+	applySlew(slewRate, INTK_R, target); //...AND INTK_R
+}
+///////////////////////////////// MODIFY ABOVE /////////////////////////////////
+
+void driveLeftRightStrafe(int slewRate, int left, int right, int strafe=0) {
+#ifdef STRAFE
+	#ifdef H_DRIVE
+		driveHDrive(slewRate, left, right, strafe); //H-Drive
+	#else
+		driveFlFrBlBr( //Mecanum or X-Drive
+			slewRate,
+			left  + strafe,
+			right - strafe,
+			left  - strafe,
+			right + strafe
+		);
+	#endif
+#else
+	driveFlFrBlBr( //Tank drive
 		slewRate,
-		left  + strafe,
-		right - strafe,
-		left  - strafe,
-		right + strafe
+		left,
+		right,
+		left,
+		right
 	);
+#endif
 }
 
 void driveForwardTurnStrafe(int slewRate, int forward, int turn, int strafe) {
-	driveFlFrBlBr(
+#ifdef STRAFE
+	#ifdef H_DRIVE
+		driveHDrive( //H-Drive
+			slewRate,
+			forward + turn,
+			forward - turn,
+			strafe
+		);
+	#else
+		driveFlFrBlBr( //Mecanum or X-Drive
+			slewRate,
+			forward + turn + strafe,
+			forward + turn - strafe,
+			forward - turn - strafe,
+			forward - turn + strafe
+		);
+	#endif
+#else
+	driveFlFrBlBr( //Tank drive
 		slewRate,
-		forward + turn + strafe,
-		forward + turn - strafe,
-		forward - turn - strafe,
-		forward - turn + strafe
+		forward + turn,
+		forward - turn,
+		forward + turn,
+		forward - turn,
 	);
+#endif
 }
