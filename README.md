@@ -573,5 +573,5 @@ Copyright (c) 2014, Joseph Dykstra
 [driveForwardTurnStrafe]: #void-driveforwardturnstrafeint-slewrate-int-forward-int-turn-int-strafe
 [driveLeftRightStrafe]: #void-driveleftrightstrafeint-slewrate-int-left-int-right-int-strafe
 [solenoid]: #void-solenoidint-sensor-t_solenoid_opts-targetstate
-[liftSpeeds]: #void-liftSpeedsint-slewRate-unsigned-int-both
-[intakeSpeed]: #void-intakeSpeedint-slewRate-int-target
+[liftSpeeds]: #void-liftspeedsint-slewrate-unsigned-int-both
+[intakeSpeed]: #void-intakespeedint-slewrate-int-target
