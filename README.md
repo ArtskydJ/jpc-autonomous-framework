@@ -36,8 +36,8 @@ This was an entry for [jpearman's 2014 programming challenge](http://www.vexforu
 5. Open `motor-functions.c`. Change the motor names in the following functions:
 	- In [`driveFlFrBlBr()`][driveFlFrBlBr] change `DRIVE_FL` down to `DRIVE_BR2`.
 	- If you have an H-Drive, change `DRIVE_L1` through `DRIVE_L2`.
-	- In [`liftSpeeds()`] change `LIFT_L` and `LIFT_R`.
-	- In [`intakeSpeed()`] change `INTK_L` and `INTK_R`.
+	- In [`liftSpeeds()`][liftSpeeds] change `LIFT_L` and `LIFT_R`.
+	- In [`intakeSpeed()`][intakeSpeed] change `INTK_L` and `INTK_R`.
 
 
 
@@ -61,7 +61,7 @@ If you have concerns that this will help teams that don't know how to program, k
 
 - The acronym `jpc` stands for `jpearman programming challenge`.
 - The terms `speed` and `power` are used interchangeably as motor speed/power values.
-- An `API` is a (in this case) collection of functions that are for the programmer to use.
+- An `API` is (in this case) a collection of functions that are for the programmer to use.
 
 
 
@@ -94,7 +94,7 @@ These can be used anywhere.
 - `OFF` - When used with [`solenoid()`][solenoid], this will turn the specified solenoid off.
 - `ON` - When used with [`solenoid()`][solenoid], this will turn the specified solenoid on.
 - `TOGGLE` - When used with [`solenoid()`][solenoid], this will toggle the specified solenoid.
-- `NUM_OF_SOLENOID_OPTS` - `3` in this case
+- `NUM_OF_SOLENOID_OPTS` - `3` in this case.
 
 ###T_END_TYPES
 - `TIME_LIMIT` - End when the step reached the time specified in `endTime`.
@@ -134,7 +134,7 @@ driveFlFrBlBr(10, FWD, FWD, FWD, FWD); //Drive forward
 - `int right` is the target speed for the left side. Negative for reverse.
 - `int strafe` is the target strafing speed. Negative for left.
 
-If you run this once with a preset distance, don't expect this to work. This has to be run in a loop to accurately target a certain distance. Don't worry; the looping is done automatically in the built in [`auto()`][auto] function.
+If you run this once with a preset distance, don't expect this to work. This has to be run in a loop to accurately target a certain distance. Don't worry; the looping is done automatically in `task autonomous()`, inside `index.c`.
 
 ```c
 driveLeftRightStrafe(10, FWD, FWD, 0); //Drive forward
@@ -147,7 +147,7 @@ driveLeftRightStrafe(10, FWD, FWD, 0); //Drive forward
 - `int turn` is the target turning speed. Negative for left.
 - `int strafe` is the target strafing speed. Negative for left.
 
-If you run this once with a preset distance, don't expect this to work. This has to be run in a loop to accurately target a certain distance. Don't worry; the looping is done automatically in the built in [`auto()`][auto] function.
+If you run this once with a preset distance, don't expect this to work. This has to be run in a loop to accurately target a certain distance. Don't worry; the looping is done automatically in `task autonomous()`, inside `index.c`.
 
 ```c
 driveForwardTurnStrafe(10, FWD, 0, 0); //Drive forward
@@ -158,7 +158,7 @@ driveForwardTurnStrafe(10, FWD, 0, 0); //Drive forward
 - `int slewRate` is the rate at which the motor approaches its target.
 - `unsigned int both` holds the speeds for both sides of the lift. The speeds are encoded. (See [Encoding][encoding]) for details of encoding.)
 
-If you run this once with a preset height, don't expect this to work. This has to be run in a loop to accurately target a certain height. Don't worry; the looping is done automatically in the built in [`auto()`][auto] function.
+If you run this once with a preset height, don't expect this to work. This has to be run in a loop to accurately target a certain height. Don't worry; the looping is done automatically in `task autonomous()`, inside `index.c`.
 
 ```c
 liftSpeeds(10, encode(FWD, FWD)); //Lift forward
@@ -580,3 +580,5 @@ Copyright (c) 2014, Joseph Dykstra
 [driveForwardTurnStrafe]: #void-driveforwardturnstrafeint-slewrate-int-forward-int-turn-int-strafe
 [driveLeftRightStrafe]: #void-driveleftrightstrafeint-slewrate-int-left-int-right-int-strafe
 [solenoid]: #void-solenoidint-sensor-t_solenoid_opts-targetstate
+[liftSpeeds]: #void-liftspeedsint-slewrate-unsigned-int-both
+[intakeSpeed]: #void-intakespeedint-slewrate-int-target
