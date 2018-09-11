@@ -457,7 +457,7 @@ If you want to add one of these functions as an argument to [`auto()`][auto], pl
 
 If you are creating a function to be used as an argument to [`auto()`][auto], feel free to use the following:
 
-###unsigned int encode(int l, int r)
+### unsigned int encode(int l, int r)
 
 This function produces the encoded value from two numbers ranging from `-127` - `127`, and returns it as an `unsigned int`.
 
@@ -537,7 +537,7 @@ Returns an encoded number for the left and right sides to go to the target encod
 ### void solenoid(int sensor, T_SOLENOID_OPTS targetState)
 
 - `int sensor` is the digital out that will be affected.
-- `T_SOLENOID_OPTS targetState` is the state that the solenoid is being set to. See [`T_SOLENOID_OPTS`][#t_solenoid_opts]
+- `T_SOLENOID_OPTS targetState` is the state that the solenoid is being set to. See [`T_SOLENOID_OPTS`](#t_solenoid_opts)
 
 ```c
 solenoid(CATAPULT, TOGGLE); //Toggle catapult solenoid
