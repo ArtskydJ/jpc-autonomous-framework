@@ -22,10 +22,10 @@ This was an entry for [jpearman's 2014 programming challenge](http://www.vexforu
 
 
 
-#How to use
+# How to use
 
 1. Read this entire file. :D
-2. Fork this project and clone your fork to your computer.
+2. [Download the source code](https://github.com/ArtskydJ/jpc-autonomous-framework/releases) to your computer.
 3. Open `index.c` and enter all your motors and sensors.
 4. Open `config.c` and enter your configuration:
 	- Enter your sensor config into the `#define`s. (Should be around line 25.)
@@ -41,7 +41,7 @@ This was an entry for [jpearman's 2014 programming challenge](http://www.vexforu
 
 
 
-#Contributing
+# Contributing
 
 When making an issue or a pull request, please do not be vague.
 
@@ -57,7 +57,7 @@ If you have concerns that this will help teams that don't know how to program, k
 
 
 
-#Terms
+# Terms
 
 - The acronym `jpc` stands for `jpearman programming challenge`.
 - The terms `speed` and `power` are used interchangeably as motor speed/power values.
@@ -65,9 +65,9 @@ If you have concerns that this will help teams that don't know how to program, k
 
 
 
-#Constants
+# Constants
 
-##`#define`s
+## `#define`s
 
 These can be used anywhere.
 
@@ -87,16 +87,16 @@ These can be used anywhere.
 | MOTOR_ALLOW_ZONE |   30   | Allowable speed for going to next step.
 
 
-##`enum`s:
+## `enum`s:
 
-###T_SOLENOID_OPTS
+### T_SOLENOID_OPTS
 
 - `OFF` - When used with [`solenoid()`][solenoid], this will turn the specified solenoid off.
 - `ON` - When used with [`solenoid()`][solenoid], this will turn the specified solenoid on.
 - `TOGGLE` - When used with [`solenoid()`][solenoid], this will toggle the specified solenoid.
 - `NUM_OF_SOLENOID_OPTS` - `3` in this case.
 
-###T_END_TYPES
+### T_END_TYPES
 - `TIME_LIMIT` - End when the step reached the time specified in `endTime`.
 - `DRIVE_MOTORS` - End when drive motors are going slow, and then add `endTime`. (I.E., They reached their target position(s).)
 - `LIFT_MOTORS` - End when lift motors are going slow, and then add `endTime`. (I.E., They reached their target position(s).)
@@ -106,16 +106,16 @@ These can be used anywhere.
 
 
 
-#Basic API
+# Basic API
 
 The basic API has all the functions you should need. If you want more, check out the [Advanced API](#advanced-api).
 
 
-##Motor Functions
+## Motor Functions
 
 It is not suggested to use these functions for autonomous. Try using [`auto()`][auto].
 
-###void driveFlFrBlBr(int slewRate, int frontLeft, int frontRight, int backLeft, int backRight)
+### void driveFlFrBlBr(int slewRate, int frontLeft, int frontRight, int backLeft, int backRight)
 
 - `int slewRate` is the rate at which the motor approaches its target.
 - `int frontLeft` is the target speed for the front left motor(s). Negative for reverse.
@@ -127,7 +127,7 @@ It is not suggested to use these functions for autonomous. Try using [`auto()`][
 driveFlFrBlBr(10, FWD, FWD, FWD, FWD); //Drive forward
 ```
 
-###void driveLeftRightStrafe(int slewRate, int left, int right, int strafe)
+### void driveLeftRightStrafe(int slewRate, int left, int right, int strafe)
 
 - `int slewRate` is the rate at which the motor approaches its target.
 - `int left` is the target speed for the left side. Negative for reverse.
@@ -140,7 +140,7 @@ If you run this once with a preset distance, don't expect this to work. This has
 driveLeftRightStrafe(10, FWD, FWD, 0); //Drive forward
 ```
 
-###void driveForwardTurnStrafe(int slewRate, int forward, int turn, int strafe)
+### void driveForwardTurnStrafe(int slewRate, int forward, int turn, int strafe)
 
 - `int slewRate` is the rate at which the motor approaches its target.
 - `int forward` is the target forward or backward speed. Negative for reverse.
@@ -153,7 +153,7 @@ If you run this once with a preset distance, don't expect this to work. This has
 driveForwardTurnStrafe(10, FWD, 0, 0); //Drive forward
 ```
 
-###void liftSpeeds(int slewRate, unsigned int both)
+### void liftSpeeds(int slewRate, unsigned int both)
 
 - `int slewRate` is the rate at which the motor approaches its target.
 - `unsigned int both` holds the speeds for both sides of the lift. The speeds are encoded. (See [Encoding][encoding]) for details of encoding.)
@@ -164,7 +164,7 @@ If you run this once with a preset height, don't expect this to work. This has t
 liftSpeeds(10, encode(FWD, FWD)); //Lift forward
 ```
 
-###void intakeSpeed(int slewRate, int target)
+### void intakeSpeed(int slewRate, int target)
 
 - `int slewRate` is the rate at which the motor approaches its target.
 - `int target` is the target speed. Negative for reverse.
@@ -174,9 +174,9 @@ intakeSpeed(10, FWD); //Intake forward
 ```
 
 
-##Utility Functions
+## Utility Functions
 
-###int rangeLimit(int min, int value, int max)
+### int rangeLimit(int min, int value, int max)
 
 - `int min` is the minimum value that `rangeLimit()` will return
 - `int value` is the value in question. (Note that this variable is not changed. A new integer is returned.)
@@ -197,7 +197,7 @@ rangeLimit(3, 8, 7); //Returns 7
 rangeLimit(3, 9, 7); //Returns 7
 ```
 
-###void constantLoopTime()
+### void constantLoopTime()
 
 This function keeps the loop iteration interval consistent in the loop that it's called.
 
@@ -216,7 +216,7 @@ task main() {
 }
 ```
 
-###int potReverse(int potentiometer)
+### int potReverse(int potentiometer)
 
 - `int potentiometer` is a number from `0` - `4095` that this function "reverses". (Note that this variable is not changed. A new integer is returned.)
 
@@ -232,7 +232,7 @@ potReverse(4095); //Returns 0
 potReverse(2048); //Returns 2047
 ```
 
-###int potPosition(int numOfOptions, int potentiometer)
+### int potPosition(int numOfOptions, int potentiometer)
 
 - `int numOfOptions` is a number from `0` - `4095` that this function allows as a range.
 - `int potentiometer` is a number from `0` - `4095` that this function scales.
@@ -258,7 +258,7 @@ potPosition(3, 4000); //Returns 2
 potPosition(3, 4095); //Returns 2
 ```
 
-###int slew(int target, int now, int rate)
+### int slew(int target, int now, int rate)
 
 - `int target` is the value that `now` goes toward.
 - `int now` is the value that is targetting `target`. (Note that this variable is not changed. A new integer is returned.)
@@ -293,7 +293,7 @@ slew(-100, -80, 10) //Returns -90
 slew(-100, -90, 10) //Returns -100
 ```
 
-###int buttonsToSpeed(TVexJoysticks forwardBtn, TVexJoysticks reverseBtn, int holdPower=0)
+### int buttonsToSpeed(TVexJoysticks forwardBtn, TVexJoysticks reverseBtn, int holdPower=0)
 
 - `TVexJoysticks forwardBtn` is the button that causes `127` to be returned when pressed.
 - `TVexJoysticks reverseBtn` is the button that causes `-127` to be returned when pressed.
@@ -318,9 +318,9 @@ Returns `-127` if `8L` is not pressed and `8R` is.
 Returns `45` if `8L` and `8R` are both not pressed, or both pressed.
 
 
-##Autonomous Functions
+## Autonomous Functions
 
-###How Encoding Works:
+### How Encoding Works:
 
 The functions in this section return encoded values. These values have two motor speeds encoded inside them. These values are `unsigned int`s. This is how it works:
 
@@ -338,7 +338,7 @@ Let's say that the left side is supposed to go a speed of `-60`, and the right s
 |  └► | 63299 |    └► | 0xF743 |     └►    | 11110111 01000011 | add 'l' and 'r'     |
 
 
-###void auto(unsigned int driveLR, int driveStrafe, unsigned int liftLR, int intake, T_END_TYPES endType, int endTime)
+### void auto(unsigned int driveLR, int driveStrafe, unsigned int liftLR, int intake, T_END_TYPES endType, int endTime)
 
 - `unsigned int driveLR` is an encoded value holding the speeds for the left and right sides of the drive.
 - `int driveStrafe` is number from `-127` - `127` for the power that the robot will strafe. Negative for left.
@@ -365,56 +365,56 @@ auto(stopped(), 0, liftPreset(MED_POST), 0, LIFT_MOTORS, 500);
 auto(stopped(), RIGHT, stopped(), 0, TIME_LIMIT, 500);
 ```
 
-###unsigned int stopped()
+### unsigned int stopped()
 
 Returns an encoded number for both sides going a speed of 0.
 
 Aliases: `encode2(0)`, `encode(0, 0)`
 
 
-###unsigned int straight(int spd)
+### unsigned int straight(int spd)
 
 Returns an encoded number for both sides going a speed of `spd`.
 
 Aliases: `encode2(spd)`, `encode(spd, spd)`
 
 
-###unsigned int speeds(int l, int r)
+### unsigned int speeds(int l, int r)
 
 Returns an encoded number for the left to go a speed of `l`, and the right to go going a speed of `r`.
 
 Alias: `encode(l, r)`
 
 
-###unsigned int turn(int spd)
+### unsigned int turn(int spd)
 
 Returns an encoded number for the left to go a speed of `spd`, and the right to go a speed of `-spd`.
 
 Aliases: `encodeNegative2(spd)`, `encode(spd, -spd)`
 
 
-###unsigned int speedL(int l)
+### unsigned int speedL(int l)
 
 Returns an encoded number for the left side going a speed of `l`, and the right side to be stopped.
 
 Aliases: `encode(l, 0)`, `encodeL(l)`
 
 
-###unsigned int speedR(int r)
+### unsigned int speedR(int r)
 
 Returns an encoded number for the left side to be stopped, and the right side going a speed of `r`.
 
 Aliases: `encode(0, r)`, `encodeR(r)`
 
 
-###unsigned int gyro2(int deg)
+### unsigned int gyro2(int deg)
 
 - `int deg` is the number of degrees the robot is supposed to turn in that step.
 
 Returns an encoded number for the left side to go one way and the right side to go the other. It reads the gyro sensor specified in `config.c` as `CURRENT_GYRO` and uses `GYRO_P` to calculate the speeds the wheels should turn to accurately turn `deg` number of degrees.
 
 
-###unsigned int enc(int dist)
+### unsigned int enc(int dist)
 
 - `int dist` is the number of encoder ticks the robot is supposed to travel in that step.
 
@@ -424,14 +424,14 @@ Alias: `enc2(dist, dist)`, `enc1Spd(dist, FWD)`
 
 
 
-#Advanced API
+# Advanced API
 
 Such advanced. Much wow.
 
 
-##Motor Functions
+## Motor Functions
 
-###void applySlew(int slewRate, int mtr, int target)
+### void applySlew(int slewRate, int mtr, int target)
 
 A wrapper function for [`slew()`][slew] that applies the slew result to a given motor. The [`slew()`][slew] function's `now` argument is `applySlew()`'s supplied motor's speed.
 
@@ -447,7 +447,7 @@ applySlew(10, 0,        100); //Sets motor[0] 10 power closer to 100
 ```
 
 
-##Utility Functions
+## Utility Functions
 
 Forgot how encoding works? Check out the [explanation][encoding].
 
@@ -461,23 +461,23 @@ If you are creating a function to be used as an argument to [`auto()`][auto], fe
 
 This function produces the encoded value from two numbers ranging from `-127` - `127`, and returns it as an `unsigned int`.
 
-###unsigned int encode2(int lr)
+### unsigned int encode2(int lr)
 
 Shorthand for `encode(lr, lr)`.
 
-###unsigned int encodeNegative2(int lr)
+### unsigned int encodeNegative2(int lr)
 
 Shorthand for `encode(lr, -lr)`.
 
-###unsigned int encodeL(int l)
+### unsigned int encodeL(int l)
 
 Shorthand for `encode(l, 0)`.
 
-###unsigned int encodeR(int r)
+### unsigned int encodeR(int r)
 
 Shorthand for `encode(0, r)`.
 
-###int decodeL(unsigned int n)
+### int decodeL(unsigned int n)
 
 This function takes an encoded value and returns the motor power for the left side.
 
@@ -485,7 +485,7 @@ This function takes an encoded value and returns the motor power for the left si
 decodeL( encode(100, 99) ); //Returns 100
 ```
 
-###int decodeL(unsigned int n)
+### int decodeL(unsigned int n)
 
 This function takes an encoded value and returns the motor power for the right side.
 
@@ -494,47 +494,47 @@ decodeL( encode(100, 99) ); //Returns 99
 ```
 
 
-##Autonomous Functions
+## Autonomous Functions
 
-###int encStrafe1(int n)
+### int encStrafe1(int n)
 
 - `int n` is the number of encoder ticks the robot is supposed to travel in that step.
 
 Returns a *non*-encoded number for strafing `n` encoder ticks reading 1 encoder.
 
-###int encStrafe2(int n)
+### int encStrafe2(int n)
 
 - `int n` is the number of encoder ticks the robot is supposed to travel in that step.
 
 Returns a *non*-encoded number for strafing `n` encoder ticks reading 2 encoders.
 
-###unsigned int gyroL(int deg)
+### unsigned int gyroL(int deg)
 
 - `int deg` is the number of degrees the robot is supposed to turn in that step.
 
 Returns an encoded number for the left side to target the gyro. It reads the gyro sensor specified in `config.c` as `CURRENT_GYRO` and uses `GYRO_P` to calculate the speed the left wheel(s) should turn to accurately turn `deg` number of degrees.
 
-###unsigned int gyroR(int deg)
+### unsigned int gyroR(int deg)
 
 - `int deg` is the number of degrees the robot is supposed to turn in that step.
 
 Returns an encoded number for the right side to target the gyro. It reads the gyro sensor specified in `config.c` as `CURRENT_GYRO` and uses `GYRO_P` to calculate the speed the right wheel(s) should turn to accurately turn `deg` number of degrees.
 
-###unsigned int enc2(int distL, int distR)
+### unsigned int enc2(int distL, int distR)
 
 - `int distL` is the number of encoder ticks the robot's left side is supposed to travel in that step.
 - `int distR` is the number of encoder ticks the robot's right side is supposed to travel in that step.
 
 Returns an encoded number for the left and right sides to go to their individual target encoder distances. It reads the left and right encoders (specified in `config.c`) and `ENC_DRV_P` to calculate the speeds the wheels should turn to accurately reach the setpoints.
 
-###unsigned int enc1Spd(int dist, int spd)
+### unsigned int enc1Spd(int dist, int spd)
 
 - `int dist` is the number of encoder ticks the robot is supposed to travel in that step.
 - `int spd` is the maximum speed the robot will go during that step. (If it is set as `99`, the max speed is `99`, and the max reverse speed is `-99`.)
 
 Returns an encoded number for the left and right sides to go to the target encoder distance. It reads the left and right encoders (specified in `config.c`) and `ENC_DRV_P` to calculate the speeds the wheels should turn to accurately reach the setpoints. The max speed for each side is specified in `spd`.
 
-###void solenoid(int sensor, T_SOLENOID_OPTS targetState)
+### void solenoid(int sensor, T_SOLENOID_OPTS targetState)
 
 - `int sensor` is the digital out that will be affected.
 - `T_SOLENOID_OPTS targetState` is the state that the solenoid is being set to. See [`T_SOLENOID_OPTS`][#t_solenoid_opts]
@@ -544,7 +544,7 @@ solenoid(CATAPULT, TOGGLE); //Toggle catapult solenoid
 solenoid(0, OFF); //Turn off solenoid 0
 ```
 
-###unsigned int liftPreset(T_PRESETS height)
+### unsigned int liftPreset(T_PRESETS height)
 
 `T_PRESETS height` is a custom defined type of variable called `T_PRESETS` that defines the height target for the lift.
 
@@ -565,7 +565,7 @@ while (time1[T1] < 500 || abs(motor[LIFT_L]) > 30) {
 ```
 
 
-#License
+# License
 
 [MIT](http://opensource.org/licenses/MIT)
 
