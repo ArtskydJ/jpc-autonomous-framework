@@ -485,12 +485,12 @@ This function takes an encoded value and returns the motor power for the left si
 decodeL( encode(100, 99) ); //Returns 100
 ```
 
-### int decodeL(unsigned int n)
+### int decodeR(unsigned int n)
 
 This function takes an encoded value and returns the motor power for the right side.
 
 ```c
-decodeL( encode(100, 99) ); //Returns 99
+decodeR( encode(100, 99) ); //Returns 99
 ```
 
 
